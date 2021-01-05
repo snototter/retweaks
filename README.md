@@ -58,6 +58,8 @@ Information about the initial files (as of firmware version 2.5) via `file`:
 To back up these files (as of firmware version 2.5):  
 `scp root@<HOSTNAME>:/usr/share/remarkable/\{batteryempty.png,overheating.png,rebooting.png,starting.png,lowbattery.png,poweroff.png,splash.png,suspended.png\} rm2-backup/splash-screens/`
 
+Some of my custom splash screens are located at [custom/splash-screens](./custom/splash-screens)
+
 
 # Templates
 To back up these files (as of firmware version 2.5):  

@@ -15,12 +15,12 @@ https://remarkablewiki.com/start
     ```bash
     cat ~/.ssh/<KEYNAME>.pub | ssh root@<IP-ADDRESS> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
     ```
-  * Edit `~/.ssh/config` on the host to use the key:
+  * Edit `~/.ssh/config` on the host to use the key and prefer the Ethernet-over-USB connection over WIFI:
     ```bash
-    Match host <HOSTNAME> exec "nc -z <WIFI-IP-ADDRESS> -w 1 %p"
-        HostName <WIFI-IP-ADDRESS>
-    Match host <HOSTNAME>
+    Match host <HOSTNAME> exec "nc -z 10.11.99.1 -w 1 %p"
         HostName 10.11.99.1
+    Match host <HOSTNAME>
+        HostName <WIFI-IP-ADDRESS>
     Host <HOSTNAME>
       HostName <HOSTNAME>
       User root

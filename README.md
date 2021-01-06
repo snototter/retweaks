@@ -31,6 +31,10 @@ https://remarkablewiki.com/start
   alias ll='ls -la`
   alias ..='cd ..'
   ```
+* Set time zone
+  * On the host: `date +%Z` (prints CET for me, obviously)
+  * On the tablet: `timedatectl set-timezone CET`
+
 
 # Important Locations
 Important locations and files for backing up:

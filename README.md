@@ -22,7 +22,6 @@ https://remarkablewiki.com/start
     Match host <HOSTNAME>
         HostName <WIFI-IP-ADDRESS>
     Host <HOSTNAME>
-      HostName <HOSTNAME>
       User root
       IdentityFile ~/.ssh/<KEYNAME>
     ```

@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer to set custom splash screens
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=multi-user.target
+

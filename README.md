@@ -13,7 +13,7 @@ https://remarkablewiki.com/start
   * SSH password can be changed via `~/.config/remarkable/xochitl.conf`, edit the `DeveloperPassword` setting.
   * Add your private key for passwordless login (from the host):
     ```bash
-    cat ~/.ssh/<KEYNAME>.pub | ssh root@<IP-ADDRESS> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+    $ cat ~/.ssh/<KEYNAME>.pub | ssh root@<IP-ADDRESS> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
     ```
   * Edit `~/.ssh/config` on the host to use the key and prefer the Ethernet-over-USB connection over WIFI:
     ```bash
@@ -40,10 +40,10 @@ https://remarkablewiki.com/start
 Important locations and files for backing up:
 * All personal content (notebooks, books/PDFs, etc.) are located at `~/.local/share/remarkable/xochitl/`.  
   Backing up could take a while:  
-  `scp -r root@<HOSTNAME>:~/.local/share/remarkable/xochitl/ rm2-backup/xochitl-files/`
+  `$ scp -r root@<HOSTNAME>:~/.local/share/remarkable/xochitl/ rm2-backup/xochitl-files/`
 * The configuration file is located at `~/.config/remarkable/xochitl.conf`.  
   To back up:  
-  `scp root@<HOSTNAME>:~/.config/remarkable/xochitl.conf rm2-backup/`
+  `$ scp root@<HOSTNAME>:~/.config/remarkable/xochitl.conf rm2-backup/`
 
 
 # Splash Screens
@@ -59,13 +59,15 @@ Information about the initial files (as of firmware version 2.5) via `file`:
 * `suspended.png`: PNG image data, 1404 x 1872, 8-bit grayscale, non-interlaced
 
 To back up these files (as of firmware version 2.5):  
-`scp root@<HOSTNAME>:/usr/share/remarkable/\{batteryempty.png,overheating.png,rebooting.png,starting.png,lowbattery.png,poweroff.png,splash.png,suspended.png\} rm2-backup/splash-screens/`
+`$ scp root@<HOSTNAME>:/usr/share/remarkable/\{batteryempty.png,overheating.png,rebooting.png,starting.png,lowbattery.png,poweroff.png,splash.png,suspended.png\} rm2-backup/splash-screens/`
 
-# Custom Sleep Screen
-
-TODO  
-* how to set up (copy folder, run 01)
-* how to disable (99)
+My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically changes the sleep/suspended screen upon each reboot/restart of xochitl:
+* Copy the [`./custom`](./custom) directory to the remarkable2 (e.g. to `~/custom`), then install the service via:
+  ```bash
+  # cd ~/custom/suspend-screen-cycler
+  # ./01-install.sh
+  ```
+* To uninstall this service, run `./99-uninstall.sh` - **Note:** this will not restore the original suspend screen.
 
 
 # Templates
@@ -74,8 +76,9 @@ To back up these files (as of firmware version 2.5):
 
 
 # TODOs
+Ideas/stuff I'd like to try:
 * add custom templates (ruler + finer grid)
-* add custom splash screens - maybe use a systemctl service to randomly select a splash screen, like here https://github.com/Neurone/reMarkable
+* add custom splash screens
 * live viewer (whiteboard for lectures)
 * cross compilation  
   https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  

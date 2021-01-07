@@ -1,13 +1,12 @@
 [Unit]
 Description=Set custom suspend screens
-#remarkable doesn't use systemd-suspend. Thus, the following
-#targets don't work:
-#After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+After=home.mount
+Before=xochitl.service
 
 [Service]
 Type=simple
 ExecStart=SCRIPTPATH/suspend-screen-cycler.sh
 
-# Install section is not needed, because we use a timer as of 01/2021 
-#[Install]
-#WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+[Install]
+WantedBy=xochitl.service
+

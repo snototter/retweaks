@@ -4,7 +4,5 @@
 set -e
 source ../bashfun.sh
 
-svcname="custom-suspend-screen"
-uninstall_systemd_unit "${svcname}.timer"
-uninstall_systemd_unit "${svcname}.service"
+uninstall_systemd_unit "custom-suspend-screen.service"
 

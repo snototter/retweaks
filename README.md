@@ -6,7 +6,7 @@ https://remarkablewiki.com/start
 
 
 # Installation
-
+## General Device Setup
 * Change hostname via `/etc/hostname`
 * SSH access (refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh) for details and troubleshooting).
   * The password is shown on the device via `Settings > Help > Copyrights and Licenses`
@@ -34,6 +34,9 @@ https://remarkablewiki.com/start
 * Set time zone
   * On the host: `date +%Z` (prints CET for me, obviously)
   * On the tablet: `timedatectl set-timezone CET`
+
+## Personalization
+* TODO scp `~/custom`, install services
 
 
 # Important Locations

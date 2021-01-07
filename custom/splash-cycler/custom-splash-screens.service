@@ -1,11 +1,14 @@
 [Unit]
 Description=Set custom splash screens
-After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+#remarkable doesn't use systemd-suspend. Thus, the following
+#targets (see also [Install] section) don't work:
+#After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 
 [Service]
 Type=simple
 ExecStart=SCRIPTPATH/splash-cycler.sh
 
 [Install]
-WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+#WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+WantedBy=multi-user.target
 

@@ -1,12 +1,11 @@
 [Unit]
 Description=Set custom splash screens
-After=sleep.target
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 
 [Service]
 Type=simple
 ExecStart=SCRIPTPATH/splash-cycler.sh
-After=home.mount
 
 [Install]
-WantedBy=sleep.target
+WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 

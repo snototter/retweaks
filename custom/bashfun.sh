@@ -2,6 +2,16 @@
 #
 # Custom bash functions
 
+#function testfx
+#{
+#  if [ "$1" = true ]
+#  then
+#    echo "$1 is TRUE"
+#  else
+#    echo "$1 is FALSE"
+#  fi
+#}
+
 function rec_resolve_dir
 {
   # Recursively resolves the given directory. Taken from https://stackoverflow.com/a/246128/400948
@@ -17,6 +27,21 @@ function rec_resolve_dir
 }
 
 
+function uninstall_systemd_unit
+{
+  # Disables, stops and removes the /etc/systemd/system/$1 file
+  # Can be either a .service or a .timer file.
+  #
+  # Params:
+  # $1 NAME_OF_UNIT (including extension)
+  svc=$1
+  echo "Uninstalling $svc"
+  systemctl disable $svc
+  systemctl stop $svc
+  rm -f /etc/systemd/system/$svc
+  systemctl daemon-reload
+}
+
 function install_service
 {
   # Installs the "$1".service file (must be located within the current directory)
@@ -24,8 +49,10 @@ function install_service
   #
   # Params:
   # $1 NAME_OF_SERVICE (without extension)
-  # $2 SCRIPTPATH (forward slashes are allowed)
-  scriptpath=$2
+  # $2 ENABLE_AND_START (flag, must be true or false)
+  # $3 SCRIPTPATH (forward slashes are allowed)
+  enablesvc=$2
+  scriptpath=$3
 
   svc=$1.service
   sysvc=/etc/systemd/system/$svc
@@ -33,7 +60,7 @@ function install_service
   if [ -f "${sysvc}" ]
   then
     echo "Stopping previously registered service unit: ${sysvc}"
-    systemctl stop $svc || true
+    systemctl stop $svc
   fi
   
 
@@ -44,9 +71,12 @@ function install_service
   echo "Registering service '$svc'"
 
   # Reload and enable service
-  systemctl daemon-reload
-  systemctl enable $svc
-  systemctl start $svc
+  if [ "$enablesvc" = true ]
+  then
+    systemctl daemon-reload
+    systemctl enable $svc
+    systemctl start $svc
+  fi
 }
 
 

@@ -1,6 +1,7 @@
 rm2-backup/
-custom/splash-screens/poweroff.png
-custom/splash-screens/suspended.png
+custom/suspend-screen-cycler/splash-screens/poweroff.png
+custom/suspend-screen-cycler/splash-screens/suspended.png
+custom/suspend-screen-cycler/*.index
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

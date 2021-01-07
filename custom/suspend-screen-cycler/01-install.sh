@@ -1,7 +1,8 @@
 #!/bin/bash --
 
-
+set -e
 source ../bashfun.sh
+
 
 function print_usage
 {
@@ -11,8 +12,6 @@ function print_usage
   echo "  and use 'systemd-analyze calendar \"your-datestring\"' to verify."
 }
 
-# Exit upon errors
-set -e
 
 # Default recurrence: run at 06:05, 12:05 and 18:05:
 oncal="*-*-* 06,12,18:05:00"
@@ -27,10 +26,13 @@ do
   esac
 done
 
-echo "Verifying timer's OnCalendar setting:"
-systemd-analyze calendar "$oncal"
+# TODO install custom screens during installation (poweroff-xxx, suspend-xxx, starting-xxx...) and set up cycler-idx file
+
+# Cannot verify on remarkable, because systemd-analyze is not installed
+#echo "Verifying timer's OnCalendar setting:"
+#systemd-analyze calendar "$oncal"
 
 svcunit="custom-suspend-screen"
 scriptdir=$(rec_resolve_dir ${BASH_SOURCE[0]})
-install_service "$svcunit" "$scriptdir"
+install_service "$svcunit" false "$scriptdir"
 install_timer "$svcunit" "$oncal"

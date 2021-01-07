@@ -3,6 +3,7 @@ Description=Timer to set custom splash screens
 
 [Timer]
 OnCalendar=TIMERSPECIFICATION
+Unit=custom-suspend-screen.service
 
 [Install]
 WantedBy=multi-user.target

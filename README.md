@@ -1,9 +1,8 @@
 # retweaks
 
-This is a collection of stuff (tweaks, apps, workarounds, ideas, etc.) for my rm2.
+This is a collection of personalization stuff (tweaks, apps, workarounds, templates, etc.) for my rm2.
 
-https://remarkablewiki.com/start
-
+TODO add fw version
 
 # Installation
 ## General Device Setup
@@ -87,14 +86,30 @@ To add a custom template:
 
 # TODOs
 Ideas/stuff I'd like to try:
-* add custom templates (ruler + finer grid)
+* [ ] add custom templates
+  * [ ] ruler
+  * [x] 5mm grid
+  * [ ] use svgwrite (python venv under `./host/` src at `./host/template-scripting`)
 * add custom splash screens
-* live viewer (whiteboard for lectures)
+  * [ ] boot - footsteps
+  * [x] powered off - 42
+  * [x] suspend bricks
+  * [x] suspend vehicle drawings
+  * etc.
+* live viewer
+  * restream seems to work now
+  * whiteboard for lectures - full screen app, toggle bg/window transparency
+    * first, get streaming done
+    * second, toggle portrait/landscape
+    * third: toggle transparency (might not be possible https://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5), alternatively: make a screenshot to draw on
+* rprint
+  * ipp print server (cpp tcp, requires basic pdf, likely stripped down from https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
+  * maybe support images
 * cross compilation  
   https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
   rm toolchain: https://remarkablewiki.com/devel/qt_creator
 * framebuffer extraction
 * lz4 compression
 * config UI (pyqt5)
-* wacom input device
+* low priority: wacom input device
 

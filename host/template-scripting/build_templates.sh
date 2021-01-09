@@ -12,5 +12,5 @@ source "$scriptdir/../../custom/bashfun.sh"
 
 # Run the python script inside a virtualenv
 ensure_venv ../.venv3 requirements.txt
-python scripted_svg_templates.py
+python scripted_templates.py
 

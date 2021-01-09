@@ -11,6 +11,6 @@ fi
 source "$scriptdir/../../custom/bashfun.sh"
 
 # Run the python script inside a virtualenv
-ensure_venv ../.venv3 requirements.txt
-python scripted_templates.py
+ensure_venv "$scriptdir/../.venv3" "$scriptdir/requirements.txt"
+python "$scriptdir/scripted_templates.py"
 

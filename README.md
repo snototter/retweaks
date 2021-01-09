@@ -73,23 +73,35 @@ My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically
 
 
 # Templates
-To back up these files (as of firmware version 2.5):  
+Templates are located at `/usr/share/remarkable/templates`. To back them up (as of firmware version 2.5):  
 `scp -r root@<HOSTNAME>:/usr/share/remarkable/templates rm2-backup/templates/`
 
-To add a custom template:
+My [custom templates](./host/template-scripting):
+* A [5mm grid](./host/template-scripting/Grid5mm.png). The squares are 5x5 mm on the e-ink display. However, printing an exported notebook is slightly smaller (the exported PDF shows the correct size of 157x210 mm, but the printouts are smaller - **TODO:** I have to investigate the printing options (page/image scaling) in the future).
+* A [5mm grid with ruler](./host/template-scripting/GridRuler.png) - Same caveats (5x5 on the e-ink, but smaller when printed).
+
+To automatically install these on the device:
+* (Optionally) Rebuild the templates via `./host/template-scripting/build_templates.sh`
+* Run the install script (requires SSH access to the remarkable):
+  ```bash
+  $ cd ./host/template-scripting
+  $ python3 install_templates.py --host <HOSTNAME> --overwrite
+  ```
+* The install script is also able to remove unused templates (to reduce the clutter) - check the available options via the command line help: `python3 install_templates.py -h`
+
+To manually install the templates on the device:
 * Copy the `.png` and `.svg` files to `/usr/share/remarkable/templates`.
 * Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.json.inc`. **Note:** if the template supports portrait **and** landscape, there must be two entries in `templates.json`.
 * Finally, reload the templates via restarting the UI: `systemctl restart xochitl`
-* My [custom templates](./templates):
-  * A [5mm grid](./templates/Grid5mm.png) (at least on the e-ink, TODO: figure out how to export to 156x209 - actually measured - millimeters)
-  * TODO grid with ruler
+
 
 # TODOs
 Ideas/stuff I'd like to try:
 * [ ] add custom templates
   * [ ] ruler
   * [x] 5mm grid
-  * [ ] use svgwrite (python venv under `./host/` src at `./host/template-scripting`)
+  * [x] check if svg (export from remarkable!) really works (inkscape exports to plain v1.2 but not tiny...)
+  * [ ] investigate print issues - exported PDFs print at smaller sizes (width: 145 to 152 instead of 157mm), although the PDF properties are set up correctly (157x210 mm).
 * add custom splash screens
   * [ ] boot - footsteps
   * [x] powered off - 42

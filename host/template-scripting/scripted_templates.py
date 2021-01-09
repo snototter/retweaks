@@ -3,9 +3,12 @@
 """
 Creates custom SVG templates for my rm2 along with
 a .json.inc file which can be used to automagically
-register these custom templates.
-TODO reference the upload/register script once implemented
-TODO requires installed inkscape
+register/install these custom templates (see also
+./install_templates.py).
+
+Note: this script depends on inkscape (to export PNGs from
+the rendered SVGs and to convert SVG text to paths, needed
+for compatibility reasons).
 """
 
 import os
@@ -58,7 +61,12 @@ def grid5mm(filename):
                           class_='grid'))
     return dwg
 
-def ruled_grid5mm(filename):
+def ruled_grid5mm(filename,
+                  major_tick_len_horz_mm=5.0,
+                  major_tick_len_vert_mm=3.5,
+                  tick_label_margin_mm=1,
+                  invert_vertical_axis=True,
+                  font_size_px=18):
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -70,65 +78,113 @@ def ruled_grid5mm(filename):
 
     # Add style definitions
     dwg.defs.add(dwg.style("""
-.grid { stroke: black; stroke-width:0.3px; }
+.grid { stroke: black; stroke-width:0.5px; }
 .ruler { stroke: black; stroke-width:1px; }
-.txt { font-size:23px; font-family:xkcd; fill: black; dominant-baseline: middle;}
+.ruler-major { stroke: black; stroke-width:3px; }
+.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: middle;}
 """))
 
-    # Background should not be transparent
+    # Compute length of minor ticks (every 5 mm)
+    minor_tick_len_horz_mm = major_tick_len_horz_mm - 1.0
+    minor_tick_len_vert_mm = major_tick_len_vert_mm - 1.0
+    
+
+    # Background should not be transparent to avoid "funny" eraser or export 
+    # behavior (according to some reddit posts I can't find anymore...)
     dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
 
     # Millimeter to pixel conversion
     def ymm2px(y_mm):
         return y_mm / h_mm * h_px
+
     def xmm2px(x_mm):
         return x_mm / w_mm * w_px
 
-    # Horizontal lines
+    # Draw grid: Horizontal lines
     grid = dwg.add(dwg.g(id='hlines'))
-    for y_mm in range(0, h_mm+1, 5):
-        y_px = ymm2px(y_mm)
+    y_mm = 0
+    while y_mm + 2*major_tick_len_horz_mm <= h_mm:
+        y_px = ymm2px(y_mm + major_tick_len_horz_mm)
         grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
                           class_='grid'))
-    # Vertical lines (align to the right as the screen is 157mm wide)
+        y_mm += 5
+
+    # Draw grid: Vertical lines
     grid = dwg.add(dwg.g(id='vlines'))
-    offset_mm = w_mm % 5
-    offset_px = xmm2px(offset_mm)
-    for x_mm in range(0, w_mm+1, 5):
-        x_px = xmm2px(x_mm) + offset_px
+    x_mm = 0
+    while x_mm + 2*major_tick_len_vert_mm <= w_mm:
+        x_px = xmm2px(x_mm + major_tick_len_vert_mm)
         grid.add(dwg.line(start=(x_px, 0), end=(x_px, h_px),
                           class_='grid'))
+        x_mm += 5
 
     # Add the ruler ticks
     ruler = dwg.add(dwg.g(id='ruler'))
-    minor_tick_len_mm = 4.5
-    minor_tick_len_px = ymm2px(minor_tick_len_mm)
     def hruler(y_px, direction):
-        for x_mm in range(-offset_mm, w_mm+1):
-            x_px = xmm2px(x_mm) + offset_px
-            ruler.add(dwg.line(start=(x_px, y_px), 
-                              end=(x_px, y_px + direction * minor_tick_len_px),
-                              class_='ruler'))
+        minor_px = ymm2px(minor_tick_len_horz_mm)
+        major_px = ymm2px(major_tick_len_horz_mm)
+        # Offset (left) is the length (width) of the
+        # vertical ruler's major ticks!
+        x_mm = 0
+        while x_mm + 2*major_tick_len_vert_mm <= w_mm:
+            x_px = xmm2px(x_mm + major_tick_len_vert_mm)
+            is_major = (x_mm % 5) == 0
+            y_end = y_px + direction * (major_px if is_major else minor_px)
+            ruler.add(dwg.line(start=(x_px, y_px), end=(x_px, y_end),
+                              class_='ruler-major' if is_major else 'ruler'))
+            if x_mm % 10 == 0 and x_mm > 0 and x_mm < w_mm - 2*major_tick_len_vert_mm:
+                y = y_px + direction * (major_px + ymm2px(tick_label_margin_mm) + font_size_px / 2)
+                ruler.add(dwg.text(f'{x_mm}',
+                                   insert=(x_px, y),
+                                   class_='txt',
+                                   text_anchor='middle',
+                                   alignment_baseline='hanging'))
+                # ruler.add(dwg.circle(center=(x_px, y), r=2, fill="red"))  # To debug text alignment
+            x_mm += 1
     hruler(0, +1)
     hruler(h_px, -1)
 
-    minor_tick_len_px = xmm2px(minor_tick_len_mm)
-    tick_margin_px = 10
     def vruler(x_px, direction):
-        for y_mm in range(0, h_mm+1):
-            y_px = ymm2px(y_mm)
-            ruler.add(dwg.line(start=(x_px, y_px),
-                               end=(x_px + direction * minor_tick_len_px, y_px),
-                               class_='ruler'))
-            if y_mm % 10 == 0:
-                x = x_px + direction * (minor_tick_len_px + tick_margin_px)
-                y = y_px  # text bottom should be slightly above the grid line
-                dwg.add(dwg.text(f'{y_mm} mm',
-                    insert=(x, y),
-                    class_='txt',
-                    text_anchor='end' if direction < 0 else 'start'))
+        minor_px = xmm2px(minor_tick_len_vert_mm)
+        major_px = xmm2px(major_tick_len_vert_mm)
+        # Offset (top/bottom) is the length of the
+        # horizontal ruler's major ticks!
+        max_y_tick = ((h_mm - 2*major_tick_len_horz_mm) // 10) * 10
+        y_mm = 0
+        while y_mm + 2*major_tick_len_horz_mm <= h_mm:
+            y_px = ymm2px(y_mm + major_tick_len_horz_mm)
+            is_major = (y_mm % 5) == 0
+            x_end = x_px + direction * (major_px if is_major else minor_px)
+            ruler.add(dwg.line(start=(x_px, y_px), end=(x_end, y_px),
+                              class_='ruler-major' if is_major else 'ruler'))
+            if y_mm % 10 == 0 and y_mm > 0 and y_mm < h_mm - 2*major_tick_len_horz_mm:
+                x = x_px + direction * (major_px + xmm2px(tick_label_margin_mm))
+                txt = f'{int(max_y_tick - y_mm)}' if invert_vertical_axis else f'{int(y_mm)}'
+                ruler.add(dwg.text(txt,
+                                   insert=(x, y_px),
+                                   class_='txt',
+                                   text_anchor='end' if direction < 0 else 'start'))
+            y_mm += 1
     vruler(0, +1)
     vruler(w_px, -1)
+
+    # minor_tick_len_px = xmm2px(minor_tick_len_mm)
+    # tick_margin_px = 10
+    # def vruler(x_px, direction):
+    #     for y_mm in range(0, h_mm+1):
+    #         y_px = ymm2px(y_mm)
+    #         ruler.add(dwg.line(start=(x_px, y_px),
+    #                            end=(x_px + direction * minor_tick_len_px, y_px),
+    #                            class_='ruler'))
+            # if y_mm % 10 == 0:
+            #     x = x_px + direction * (minor_tick_len_px + tick_margin_px)
+            #     y = y_px  # text bottom should be slightly above the grid line
+            #     dwg.add(dwg.text(f'{y_mm} mm',
+            #         insert=(x, y),
+            #         class_='txt',
+            #         text_anchor='end' if direction < 0 else 'start'))
+    # vruler(0, +1)
+    # vruler(w_px, -1)
     return dwg
     
 
@@ -153,11 +209,11 @@ def save_template(svgtpl, name, rmfilename,
                   categories):
     print(f"""
 ##############################################################
-Saving template  "{name}"
-* SVG file:      "{rmfilename}.svg"
-* PNG file:      "{rmfilename}.png"
-* JSON snipplet: "{rmfilename}.json.inc"
-# """)
+Saving template "{name}"
+* SVG file:     "{rmfilename}.svg"
+* PNG file:     "{rmfilename}.png"
+* JSON snippet: "{rmfilename}.json.inc"
+""")
     tpl_desc = list()
     if icon_code_portrait is not None:
         tpl_desc.append(template_dict(
@@ -165,18 +221,18 @@ Saving template  "{name}"
                         False, categories))
     if icon_code_landscape is not None:
         tpl_desc.append(template_dict(
-                        name, rmfilename, icon_code_portrait,
+                        name, rmfilename, icon_code_landscape,
                         True, categories))
-    print(json.dumps(tpl_desc, indent=4))
-
-    print(f'TODO!!!!!! save {rmfilename}')
-    # TODO store json.inc
+    # Save JSON snippet
+    with open(f'{rmfilename}.json.inc', 'w') as jif:
+        json.dump(tpl_desc, jif, indent=2)
+        jif.write('\n')
+    # Save SVG
     svgtpl.save()
     # Convert text to path (to avoid problems with remarkable's PDF export)
-    subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
+    #subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
     # Export to PNG
     subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
-
 
 if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
@@ -185,8 +241,8 @@ if __name__ == '__main__':
     # 5mm grid
     save_template(grid5mm('Grid5mm.svg'),
                   name='Grid 5mm', rmfilename='Grid5mm',
-                  icon_code_portrait='\\ue99e',
-                  icon_code_landscape='\\ue9fa',
+                  icon_code_portrait='\ue99e',
+                  icon_code_landscape='\ue9fa',
                   categories=['Grids'])
 
     # Ruler with 5mm grid

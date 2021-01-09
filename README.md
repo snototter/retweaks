@@ -4,6 +4,8 @@ This is a collection of personalization stuff (tweaks, apps, workarounds, templa
 
 TODO add fw version
 
+TODO add disclaimer (obviously, these are my personal tweaks and there are no guarantees that any of these tipps will work...)
+
 # Installation
 ## General Device Setup
 * Change hostname via `/etc/hostname`
@@ -85,9 +87,10 @@ To automatically install these on the device:
 * Run the install script (requires SSH access to the remarkable):
   ```bash
   $ cd ./host/template-scripting
-  $ python3 install_templates.py --host <HOSTNAME> --overwrite
+  $ python3 install_templates.py --host <HOSTNAME>
   ```
 * The install script is also able to remove unused templates (to reduce the clutter) - check the available options via the command line help: `python3 install_templates.py -h`
+* **Do not** use the `install_templates.sh` (shell script, unless you know what you're doing). It just wraps the invocation of the python script and adds my personal parametrization.
 
 To manually install the templates on the device:
 * Copy the `.png` and `.svg` files to `/usr/share/remarkable/templates`.

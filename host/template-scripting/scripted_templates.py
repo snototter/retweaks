@@ -17,6 +17,8 @@ import subprocess
 import svgwrite
 import json
 
+#TODO ruler landscape - separate SVG (rotate text)!!!
+
 def rm2dimensions():
     """Returns the dimensions of the rm2 screen."""
     # Template size in px
@@ -66,7 +68,7 @@ def ruled_grid5mm(filename,
                   major_tick_len_vert_mm=3.5,
                   tick_label_margin_mm=1,
                   invert_vertical_axis=True,
-                  font_size_px=18):
+                  font_size_px=21):
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -168,23 +170,86 @@ def ruled_grid5mm(filename,
     vruler(0, +1)
     vruler(w_px, -1)
 
-    # minor_tick_len_px = xmm2px(minor_tick_len_mm)
-    # tick_margin_px = 10
-    # def vruler(x_px, direction):
-    #     for y_mm in range(0, h_mm+1):
-    #         y_px = ymm2px(y_mm)
-    #         ruler.add(dwg.line(start=(x_px, y_px),
-    #                            end=(x_px + direction * minor_tick_len_px, y_px),
-    #                            class_='ruler'))
-            # if y_mm % 10 == 0:
-            #     x = x_px + direction * (minor_tick_len_px + tick_margin_px)
-            #     y = y_px  # text bottom should be slightly above the grid line
-            #     dwg.add(dwg.text(f'{y_mm} mm',
-            #         insert=(x, y),
-            #         class_='txt',
-            #         text_anchor='end' if direction < 0 else 'start'))
-    # vruler(0, +1)
-    # vruler(w_px, -1)
+    # Handle the 4 courners (non-drawing/grid area)
+    # * Diagonals
+    corners = dwg.add(dwg.g(id='corner'))
+    lines = [
+        ((0, 0),  # top-left (in portrait mode)
+         (major_tick_len_vert_mm, major_tick_len_horz_mm)),
+        ((w_mm, 0),  # top-right
+         (w_mm-major_tick_len_vert_mm, major_tick_len_horz_mm)),
+        ((w_mm, h_mm),  # bottom-right
+         (w_mm-major_tick_len_vert_mm, h_mm - major_tick_len_horz_mm)),
+        ((0, h_mm),  # bottom-left
+         (major_tick_len_vert_mm, h_mm - major_tick_len_horz_mm))
+    ]
+    # Unit conversion helper
+    def mm2px(pt_mm):
+        return (xmm2px(pt_mm[0]), ymm2px(pt_mm[1]))
+
+    for ln in lines:
+        corners.add(dwg.line(start=mm2px(ln[0]),
+                             end=mm2px(ln[1]),
+                             class_='ruler'))
+    
+    # "Neatification" aka overkill:
+    for x_mm in range(-1, -int(major_tick_len_vert_mm + 0.5), -1):
+        # Don't forget: we have an offset between pixel 0 and drawing area/grid
+        xpos = x_mm + major_tick_len_vert_mm
+        # Length of tick via similar triangles
+        y_mm = xpos * major_tick_len_horz_mm / major_tick_len_vert_mm - 0.8
+        if y_mm < 0.3:
+            continue
+        # Top-left
+        x_px = xmm2px(xpos)
+        y_px = ymm2px(y_mm)
+        corners.add(dwg.line(start=(x_px, 0),
+                             end=(x_px, y_px),
+                             class_='ruler'))
+        # Bottom-left
+        corners.add(dwg.line(start=(x_px, h_px),
+                             end=(x_px, h_px - y_px),
+                             class_='ruler'))
+        # Top-right
+        xpos = w_mm - major_tick_len_vert_mm - x_mm
+        x_px = xmm2px(xpos)
+        y_px = ymm2px(y_mm)
+        corners.add(dwg.line(start=(x_px, 0),
+                             end=(x_px, y_px),
+                             class_='ruler'))
+        # Bottom-right
+        corners.add(dwg.line(start=(x_px, h_px),
+                             end=(x_px, h_px - y_px),
+                             class_='ruler'))
+
+    for y_mm in range(-1, -int(major_tick_len_horz_mm + 0.5), -1):
+        # Don't forget: we have an offset between pixel 0 and drawing area/grid
+        ypos = y_mm + major_tick_len_horz_mm
+        # Length of tick via similar triangles
+        x_mm = ypos * major_tick_len_vert_mm / major_tick_len_horz_mm - 0.8
+        if x_mm < 0.3:
+            continue
+        # Top-left
+        y_px = ymm2px(ypos)
+        x_px = xmm2px(x_mm)
+        corners.add(dwg.line(start=(0, y_px),
+                             end=(x_px, y_px),
+                             class_='ruler'))
+        # Top-right
+        corners.add(dwg.line(start=(w_px, y_px),
+                             end=(w_px - x_px, y_px),
+                             class_='ruler'))
+        # Bottom-left
+        ypos = h_mm - major_tick_len_horz_mm - y_mm
+        y_px = ymm2px(ypos)
+        corners.add(dwg.line(start=(0, y_px),
+                             end=(x_px, y_px),
+                             class_='ruler'))
+        # Bottom-right
+        corners.add(dwg.line(start=(w_px, y_px),
+                             end=(w_px - x_px, y_px),
+                             class_='ruler'))
+
     return dwg
     
 

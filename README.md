@@ -121,14 +121,20 @@ Ideas, apps and tweaks I'd like to try:
     * second, toggle portrait/landscape
     * third: toggle transparency (might not be possible https://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5), alternatively: make a screenshot to draw on
 * reprint
-  * ipp print server (cpp tcp, requires basic pdf, likely stripped down from https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
+  * ipp print server (cpp tcp)
+  * pdf support (size conversion ??)
+  https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
   * maybe support images
-  * related projects: [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud), [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)
+  * related projects:  
+    [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud)  
+    [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)  
+    [python minimal ipp server](https://github.com/h2g2bob/ipp-server)
 * cross compilation  
   https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
   rm toolchain: https://remarkablewiki.com/devel/qt_creator
 * framebuffer extraction
 * lz4 compression
-* config UI (pyqt5)
+* low priority: config UI (pyqt5)
+  * replace splash screens
+  * upload templates
 * low priority: wacom input device
-

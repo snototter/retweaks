@@ -17,7 +17,6 @@ import subprocess
 import svgwrite
 import json
 
-#TODO ruler landscape - separate SVG (rotate text)!!!
 
 def rm2dimensions():
     """Returns the dimensions of the rm2 screen."""
@@ -31,6 +30,7 @@ def rm2dimensions():
 
 
 def grid5mm(filename):
+    #TODO doc!!!
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -68,7 +68,9 @@ def ruled_grid5mm(filename,
                   major_tick_len_vert_mm=3.5,
                   tick_label_margin_mm=1,
                   invert_vertical_axis=True,
-                  font_size_px=21):
+                  font_size_px=21,
+                  landscape=False):
+    #TODO doc!!!
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -80,12 +82,12 @@ def ruled_grid5mm(filename,
 
     # Add style definitions
     dwg.defs.add(dwg.style("""
-.grid { stroke: black; stroke-width:0.5px; }
-.ruler { stroke: black; stroke-width:1px; }
-.ruler-major { stroke: black; stroke-width:3px; }
-.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: middle;}
+.grid { stroke: black; stroke-width: 0.5px; }
+.ruler { stroke: black; stroke-width: 1px; }
+.ruler-major { stroke: black; stroke-width: 3px; }
+.mark { stroke: black; stroke-width: 2px;}
+.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: central; }
 """))
-
     # Compute length of minor ticks (every 5 mm)
     minor_tick_len_horz_mm = major_tick_len_horz_mm - 1.0
     minor_tick_len_vert_mm = major_tick_len_vert_mm - 1.0
@@ -127,6 +129,7 @@ def ruled_grid5mm(filename,
         major_px = ymm2px(major_tick_len_horz_mm)
         # Offset (left) is the length (width) of the
         # vertical ruler's major ticks!
+        max_x_tick = ((w_mm - 2*major_tick_len_vert_mm) // 10) * 10
         x_mm = 0
         while x_mm + 2*major_tick_len_vert_mm <= w_mm:
             x_px = xmm2px(x_mm + major_tick_len_vert_mm)
@@ -136,11 +139,17 @@ def ruled_grid5mm(filename,
                               class_='ruler-major' if is_major else 'ruler'))
             if x_mm % 10 == 0 and x_mm > 0 and x_mm < w_mm - 2*major_tick_len_vert_mm:
                 y = y_px + direction * (major_px + ymm2px(tick_label_margin_mm) + font_size_px / 2)
-                ruler.add(dwg.text(f'{x_mm}',
-                                   insert=(x_px, y),
-                                   class_='txt',
-                                   text_anchor='middle',
-                                   alignment_baseline='hanging'))
+                if landscape:
+                    # qad: additional spacing required due to the rotation
+                    y += direction * (font_size_px / 4)
+                txt = f'{int(max_x_tick - x_mm)}' if (landscape and invert_vertical_axis) else f'{int(x_mm)}'
+                txttag = dwg.text(txt,
+                                  insert=(x_px, y),
+                                  class_='txt',
+                                  text_anchor='middle')
+                if landscape:
+                    txttag.rotate(angle=-90, center=(x_px, y))
+                ruler.add(txttag)
                 # ruler.add(dwg.circle(center=(x_px, y), r=2, fill="red"))  # To debug text alignment
             x_mm += 1
     hruler(0, +1)
@@ -161,17 +170,49 @@ def ruled_grid5mm(filename,
                               class_='ruler-major' if is_major else 'ruler'))
             if y_mm % 10 == 0 and y_mm > 0 and y_mm < h_mm - 2*major_tick_len_horz_mm:
                 x = x_px + direction * (major_px + xmm2px(tick_label_margin_mm))
-                txt = f'{int(max_y_tick - y_mm)}' if invert_vertical_axis else f'{int(y_mm)}'
-                ruler.add(dwg.text(txt,
-                                   insert=(x, y_px),
-                                   class_='txt',
-                                   text_anchor='end' if direction < 0 else 'start'))
+                if landscape:
+                    # qad: additional spacing required due to the rotation
+                    x += direction * (font_size_px / 3)
+                    txt = f'{int(max_y_tick - y_mm)}'
+                else:
+                    txt = f'{int(max_y_tick - y_mm)}' if invert_vertical_axis else f'{int(y_mm)}'
+                anchor = 'middle' if landscape else ('end' if direction < 0 else 'start')
+                txttag = dwg.text(txt,
+                                  insert=(x, y_px),
+                                  class_='txt',
+                                  text_anchor=anchor)
+                if landscape:
+                    txttag.rotate(angle=-90, center=(x, y_px))
+                ruler.add(txttag)
+                # ruler.add(dwg.circle(center=(x, y_px), r=2, fill="red"))  # To debug text alignment
             y_mm += 1
     vruler(0, +1)
     vruler(w_px, -1)
 
-    # Handle the 4 courners (non-drawing/grid area)
-    # * Diagonals
+    # Draw '+' marks
+    center_marks = dwg.add(dwg.g(id='marks'))
+    def draw_marker(gcx_mm, gcy_mm):
+        length_mm = 3
+        cx_px = xmm2px(gcx_mm + major_tick_len_vert_mm)
+        cy_px = ymm2px(gcy_mm + major_tick_len_horz_mm)
+        lh_px = xmm2px(length_mm / 2)
+        center_marks.add(dwg.line(start=(cx_px - lh_px, cy_px),
+                                  end=(cx_px + lh_px, cy_px),
+                                  class_='mark'))
+        lh_px = ymm2px(length_mm / 2)
+        center_marks.add(dwg.line(start=(cx_px, cy_px - lh_px),
+                                  end=(cx_px, cy_px + lh_px),
+                                  class_='mark'))
+
+    grid_w_mm = w_mm - 2 * major_tick_len_vert_mm
+    grid_h_mm = h_mm - 2 * major_tick_len_horz_mm
+    draw_marker(grid_w_mm/2, grid_h_mm/2)
+    draw_marker(grid_w_mm/4, grid_h_mm/4)
+    draw_marker(3*grid_w_mm/4, grid_h_mm/4)
+    draw_marker(grid_w_mm/4, 3*grid_h_mm/4)
+    draw_marker(3*grid_w_mm/4, 3*grid_h_mm/4)
+
+    # Draw diagonals at the 4 courners (non-drawing/grid area)
     corners = dwg.add(dwg.g(id='corner'))
     lines = [
         ((0, 0),  # top-left (in portrait mode)
@@ -191,8 +232,8 @@ def ruled_grid5mm(filename,
         corners.add(dwg.line(start=mm2px(ln[0]),
                              end=mm2px(ln[1]),
                              class_='ruler'))
-    
-    # "Neatification" aka overkill:
+
+    # "Neatification" aka overkill at the corners:
     for x_mm in range(-1, -int(major_tick_len_vert_mm + 0.5), -1):
         # Don't forget: we have an offset between pixel 0 and drawing area/grid
         xpos = x_mm + major_tick_len_vert_mm
@@ -252,10 +293,6 @@ def ruled_grid5mm(filename,
 
     return dwg
     
-
-#https://stackoverflow.com/questions/18057911/how-to-convert-text-to-paths
-# export to pdf
-# convert text to path!
     
 def template_dict(name, filename, icon_code,
                   landscape, categories):
@@ -295,7 +332,7 @@ Saving template "{name}"
     # Save SVG
     svgtpl.save()
     # Convert text to path (to avoid problems with remarkable's PDF export)
-    #subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
+    subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
     # Export to PNG
     subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
 
@@ -311,9 +348,20 @@ if __name__ == '__main__':
                   categories=['Grids'])
 
     # Ruler with 5mm grid
-    save_template(ruled_grid5mm('GridRuler.svg'),
-                  name='Grid Ruler', rmfilename='GridRuler',
-                  icon_code_portrait='\\ue99e',
-                  icon_code_landscape='\\ue9fa',
+    # save_template(ruled_grid5mm('GridRuler.svg'),
+    #               name='Grid Ruler', rmfilename='GridRuler',
+    #               icon_code_portrait='\\ue99e',
+    #               icon_code_landscape='\\ue9fa',
+    #               categories=['Grids'])
+    #FIXME
+    save_template(ruled_grid5mm('GridRulerP.svg'),
+                  name='Grid Ruler', rmfilename='GridRulerP',
+                  icon_code_portrait='\ue99e',
+                  icon_code_landscape=None,
+                  categories=['Grids'])
+    save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True),
+                  name='Grid Ruler', rmfilename='GridRulerLS',
+                  icon_code_portrait=None,
+                  icon_code_landscape='\ue9fa',
                   categories=['Grids'])
     

@@ -167,15 +167,16 @@ def upload_templates(args, tpl_configs):
     if len(tpl_configs) == 0:
         print('> Nothing to upload!')
         return True
-    uploaded_tpl_names = list()
+    uploaded_filenames = list()
     for cfg in tpl_configs:
-        tname = cfg['name']
-        if tname in uploaded_tpl_names:
+        fname = cfg['filename']
+        if fname in uploaded_filenames:
             # Skip second config entry for portrait + landscape templates
             continue
-        uploaded_tpl_names.append(tname)
+        uploaded_filenames.append(fname)
+        tname = cfg['name']
         print(f"* Uploading {tname}")
-        fname = cfg['filename']
+        
         if not upload_helper(args, [f'{fname}.svg', f'{fname}.png']):
             print(f'[ERROR] Cannot upload template files {fname}.[svg,png]')
             return False

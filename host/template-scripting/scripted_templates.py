@@ -314,7 +314,7 @@ def save_template(svgtpl, name, rmfilename,
 Saving template "{name}"
 * SVG file:     "{rmfilename}.svg"
 * PNG file:     "{rmfilename}.png"
-* JSON snippet: "{rmfilename}.json.inc"
+* JSON snippet: "{rmfilename}.inc.json"
 """)
     tpl_desc = list()
     if icon_code_portrait is not None:
@@ -326,7 +326,7 @@ Saving template "{name}"
                         name, rmfilename, icon_code_landscape,
                         True, categories))
     # Save JSON snippet
-    with open(f'{rmfilename}.json.inc', 'w') as jif:
+    with open(f'{rmfilename}.inc.json', 'w') as jif:
         json.dump(tpl_desc, jif, indent=2)
         jif.write('\n')
     # Save SVG

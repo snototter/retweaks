@@ -94,7 +94,7 @@ To automatically install these on the device:
 
 To manually install the templates on the device:
 * Copy the `.png` and `.svg` files to `/usr/share/remarkable/templates`.
-* Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.json.inc`.
+* Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.inc.json`.
 * Finally, reload the templates via restarting the UI: `systemctl restart xochitl`
 
 Notes:

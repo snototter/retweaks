@@ -1,18 +1,21 @@
 # retweaks
 
-This is a collection of personalization stuff (tweaks, apps, workarounds, templates, etc.) for my rm2.
+This is a collection of customization tweaks for my remarkable2.
+As these are personal customizations I will give no guarantees that any of these will work for you. The only guarantee I can give is that there is no ill intended code. There may, however, be bugs, you may lose data, or even brick your device (if you don't know what you're doing...).
 
-TODO add fw version
+Note that this is (more or less, depending on my need for sleep) ongoing work as of 01/2021.  
+All the stuff in this repository has so far been tested with FW version `2.5.0.27`.
 
-TODO add disclaimer (obviously, these are my personal tweaks and there are no guarantees that any of these tipps will work...)
 
 # Installation
 ## General Device Setup
-* Change hostname via `/etc/hostname`
-* SSH access (refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh) for details and troubleshooting).
+Customization steps I performed after completing the rM tutorial:
+* Change hostname via `/etc/hostname` (yes, I'm that nit-picky).  
+  Takes affect after reboot.
+* Simplify SSH access (refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh) for details and troubleshooting).
   * The password is shown on the device via `Settings > Help > Copyrights and Licenses`
   * SSH password can be changed via `~/.config/remarkable/xochitl.conf`, edit the `DeveloperPassword` setting.
-  * Add your private key for passwordless login (from the host):
+  * Add your public key for passwordless login (from the host) - if you don't have a key already, use `ssh-keygen` (standard RSA should work fine):
     ```bash
     $ cat ~/.ssh/<KEYNAME>.pub | ssh root@<IP-ADDRESS> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
     ```
@@ -26,21 +29,22 @@ TODO add disclaimer (obviously, these are my personal tweaks and there are no gu
       User root
       IdentityFile ~/.ssh/<KEYNAME>
     ```
-  * Set up SFTP (e.g. FileZilla)
+  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device (I'm a simple guy, I like simple UI)
 * Change command aliases via `~/.bashrc`:
   ```bash
   alias ll='ls -la`
   alias ..='cd ..'
   ```
-* Set time zone
-  * On the host: `date +%Z` (prints CET for me, obviously)
-  * On the tablet: `timedatectl set-timezone CET`
+* Change time zone (to prevent some potential issues due to clock mismatch between host and device):
+  * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` for me. **TODO:** check if DST switch works (should as `/usr/share/zoneinfo/CET` contains the jump dates between `CET` and `CEST`)
+  * Set the timezone on the tablet: `timedatectl set-timezone CET`
+
 
 ## Personalization
-* TODO scp `~/custom`, install services
+* TODO summarize (copy `~/custom`, install services, upload templates)
 
 
-# Important Locations
+# Backup Important Locations
 Important locations and files for backing up:
 * All personal content (notebooks, books/PDFs, etc.) are located at `~/.local/share/remarkable/xochitl/`.  
   Backing up could take a while:  
@@ -50,7 +54,7 @@ Important locations and files for backing up:
   `$ scp root@<HOSTNAME>:~/.config/remarkable/xochitl.conf rm2-backup/`
 
 
-# Splash Screens
+# Customize Splash Screens
 Splash screens are located at `/usr/share/remarkable`.  
 Information about the initial files (as of firmware version 2.5) via `file`:
 * `batteryempty.png`: PNG image data, 1404 x 1872, 8-bit grayscale, non-interlaced
@@ -74,22 +78,28 @@ My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically
 * To uninstall this service, run `./99-uninstall.sh` - **Note:** this will not restore the original suspend screen.
 
 
-# Templates
+# Customize Templates
 Templates are located at `/usr/share/remarkable/templates`. To back them up (as of firmware version 2.5):  
 `scp -r root@<HOSTNAME>:/usr/share/remarkable/templates rm2-backup/templates/`
 
-My [custom templates](./host/template-scripting):
-* A [5mm grid](./host/template-scripting/Grid5mm.png). The squares are 5x5 mm on the e-ink display. However, printing an exported notebook is slightly smaller (the exported PDF shows the correct size of 157x210 mm, but the printouts are smaller - **TODO:** I have to investigate the printing options (page/image scaling) in the future).
-* A [5mm grid with ruler](./host/template-scripting/GridRuler.png) - Same caveats (5x5 on the e-ink, but smaller when printed).
+A template consists of:
+* A PNG file which is shown as the first layer of your notebook/sheet.
+* An SVG file which is used whenever you export your notebook/sheet.
+* A configuration entry to properly load the template. These are stored on the device at `/usr/share/remarkable/templates/templates.json`.
 
-To automatically install these on the device:
+My [custom templates](./host/template-scripting):
+* A [5mm grid](./host/template-scripting/Grid5mm.png). The squares are 5x5 mm on the e-ink display. However, printing an exported notebook is slightly smaller (the exported PDF shows the correct size of 157x210 mm, but the printouts are smaller - **TODO:** I can't print any exported document at the correct size (need to investigate page/image scaling options of the printer).
+* A [5mm grid with horizontal & vertical rulers](./host/template-scripting/GridRuler.png) - Same caveats (5x5 mm on the e-ink, but smaller when printed).
+
+To automatically install these custom templates on the device:
 * (Optionally) Rebuild the templates via `./host/template-scripting/build_templates.sh`
-* Run the install script (requires SSH access to the remarkable):
+* Run the install script (requires SSH access):
   ```bash
   $ cd ./host/template-scripting
   $ python3 install_templates.py --host <HOSTNAME>
   ```
-* The install script is also able to remove unused templates (to reduce the clutter) - check the available options via the command line help: `python3 install_templates.py -h`
+* The install script is also able to remove templates from the device's configuration. For this, check the available options via the command line help:  
+  `python3 install_templates.py -h`
 * **Do not** use the `install_templates.sh` (shell script, unless you know what you're doing). It just wraps the invocation of the python script and adds my personal parametrization.
 
 To manually install the templates on the device:
@@ -100,22 +110,20 @@ To manually install the templates on the device:
 Notes:
 * For a list of available icon codes, check the [remarkablewiki](https://remarkablewiki.com/tips/templates).
 
+
 # TODOs
-Ideas/stuff I'd like to try:
-* [ ] add custom templates
-  * [x] ruler
-  * [x] 5mm grid
-  * [x] check if svg (export from remarkable!) really works (inkscape exports to plain v1.2 but not tiny...)
-* [ ] Investigate print issues - exported PDFs print at smaller sizes (width: 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
-* live viewer
+Ideas, apps and tweaks I'd like to try:
+* [ ] Investigate print issues - exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
+* Live viewer/digital whiteboard
   * restream seems to work now
   * whiteboard for lectures - full screen app, toggle bg/window transparency
     * first, get streaming done
     * second, toggle portrait/landscape
     * third: toggle transparency (might not be possible https://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5), alternatively: make a screenshot to draw on
-* rprint
+* reprint
   * ipp print server (cpp tcp, requires basic pdf, likely stripped down from https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
   * maybe support images
+  * related projects: [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud), [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)
 * cross compilation  
   https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
   rm toolchain: https://remarkablewiki.com/devel/qt_creator

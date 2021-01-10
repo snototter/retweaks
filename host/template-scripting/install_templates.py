@@ -211,16 +211,6 @@ def install_and_cleanup_templates():
 
     if args.remove_names is not None:
         print()
-        # #TODO 
-        #                                       'Dots S bottom',
-        #                                       'Dots S top',
-        #                                       'Grid bottom',
-        #                                       'Grid top',
-        #                                       'Lined bottom',
-        #                                       'Lined top',
-        #                                       'US College',
-        #                                       'US Legal',
-        #                                       'Weekplanner US'
         num_removed = remove_unused_templates(args.remove_names, downloaded_templates_filename)
         if num_removed == 0:
             print('> No unused templates have been removed!')

@@ -94,7 +94,7 @@ To automatically install these on the device:
 
 To manually install the templates on the device:
 * Copy the `.png` and `.svg` files to `/usr/share/remarkable/templates`.
-* Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.json.inc`. **Note:** if the template supports portrait **and** landscape, there must be two entries in `templates.json`.
+* Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.json.inc`.
 * Finally, reload the templates via restarting the UI: `systemctl restart xochitl`
 
 Notes:
@@ -106,13 +106,7 @@ Ideas/stuff I'd like to try:
   * [x] ruler
   * [x] 5mm grid
   * [x] check if svg (export from remarkable!) really works (inkscape exports to plain v1.2 but not tiny...)
-  * [ ] investigate print issues - exported PDFs print at smaller sizes (width: 145 to 152 instead of 157mm), although the PDF properties are set up correctly (157x210 mm).
-* add custom splash screens
-  * [ ] boot - footsteps
-  * [x] powered off - 42
-  * [x] suspend bricks
-  * [x] suspend vehicle drawings
-  * etc.
+* [ ] Investigate print issues - exported PDFs print at smaller sizes (width: 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
 * live viewer
   * restream seems to work now
   * whiteboard for lectures - full screen app, toggle bg/window transparency

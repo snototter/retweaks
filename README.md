@@ -97,11 +97,13 @@ To manually install the templates on the device:
 * Edit `/usr/share/remarkable/templates/templates.json`: add the corresponding entry from `.json.inc`. **Note:** if the template supports portrait **and** landscape, there must be two entries in `templates.json`.
 * Finally, reload the templates via restarting the UI: `systemctl restart xochitl`
 
+Notes:
+* For a list of available icon codes, check the [remarkablewiki](https://remarkablewiki.com/tips/templates).
 
 # TODOs
 Ideas/stuff I'd like to try:
 * [ ] add custom templates
-  * [ ] ruler
+  * [x] ruler
   * [x] 5mm grid
   * [x] check if svg (export from remarkable!) really works (inkscape exports to plain v1.2 but not tiny...)
   * [ ] investigate print issues - exported PDFs print at smaller sizes (width: 145 to 152 instead of 157mm), although the PDF properties are set up correctly (157x210 mm).

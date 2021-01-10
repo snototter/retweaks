@@ -30,7 +30,10 @@ def rm2dimensions():
 
 
 def grid5mm(filename):
-    #TODO doc!!!
+    """
+    Renders a 5x5 mm grid.
+    :filename: Output filename of the SVG.
+    """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -63,6 +66,7 @@ def grid5mm(filename):
                           class_='grid'))
     return dwg
 
+
 def ruled_grid5mm(filename,
                   major_tick_len_horz_mm=5.0,
                   major_tick_len_vert_mm=3.5,
@@ -70,7 +74,36 @@ def ruled_grid5mm(filename,
                   invert_vertical_axis=True,
                   font_size_px=21,
                   landscape=False):
-    #TODO doc!!!
+    """
+    Renders a 5x5 mm grid with rulers.
+
+    :filename: Output filename of the SVG.
+
+    :major_tick_len_horz_mm: Tick length in [mm] of the horizontal
+            rulers' (top and bottom) major ticks. Tick length of
+            minor ticks will be 1 mm less.
+
+    :major_tick_len_vert_mm: Tick length in [mm] of the vertical
+            rulers' (left and right) major ticks. Tick length of
+            minor ticks will be 1 mm less.
+
+    :tick_label_margin_mm: Margin between tip of the major ticks
+            and the corresponding label in [mm]. Note: this is not
+            an exact value - it will only be exact at the vertical
+            rulers in portrait mode (i.e. landscape=False). In any
+            other configuration, it will be slightly off (search for
+            'text rotation' in SVGs to understand why making this
+            exact would be overkill).
+
+    :invert_vertical_axis: If True, ruler marks/labels will increase from
+            bottom to top (and left to right). Otherwise, ruler marks/labels
+            increase top to bottom (and left to right, too).
+
+    :font_size_px: Size of the ruler font.
+
+    :landscape: Set to True for landscape, False for portrait version
+            of this template.
+    """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
     dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
@@ -82,17 +115,12 @@ def ruled_grid5mm(filename,
 
     # Add style definitions
     dwg.defs.add(dwg.style("""
-.grid { stroke: black; stroke-width: 0.5px; }
-.ruler { stroke: black; stroke-width: 1px; }
-.ruler-major { stroke: black; stroke-width: 3px; }
-.mark { stroke: black; stroke-width: 2px;}
-.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: central; }
-"""))
-    # Compute length of minor ticks (every 5 mm)
-    minor_tick_len_horz_mm = major_tick_len_horz_mm - 1.0
-    minor_tick_len_vert_mm = major_tick_len_vert_mm - 1.0
-    
-
+    .grid { stroke: black; stroke-width: 0.5px; }
+    .ruler { stroke: black; stroke-width: 1px; }
+    .ruler-major { stroke: black; stroke-width: 3px; }
+    .mark { stroke: black; stroke-width: 2px;}
+    .txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: central; }
+    """))
     # Background should not be transparent to avoid "funny" eraser or export 
     # behavior (according to some reddit posts I can't find anymore...)
     dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
@@ -121,6 +149,10 @@ def ruled_grid5mm(filename,
         grid.add(dwg.line(start=(x_px, 0), end=(x_px, h_px),
                           class_='grid'))
         x_mm += 5
+
+    # Compute length of minor ticks (every 5 mm)
+    minor_tick_len_horz_mm = major_tick_len_horz_mm - 1.0
+    minor_tick_len_vert_mm = major_tick_len_vert_mm - 1.0
 
     # Add the ruler ticks
     ruler = dwg.add(dwg.g(id='ruler'))
@@ -224,7 +256,7 @@ def ruled_grid5mm(filename,
         ((0, h_mm),  # bottom-left
          (major_tick_len_vert_mm, h_mm - major_tick_len_horz_mm))
     ]
-    # Unit conversion helper
+    # Unit conversion helper for points (2d coordinates in [mm])
     def mm2px(pt_mm):
         return (xmm2px(pt_mm[0]), ymm2px(pt_mm[1]))
 
@@ -290,13 +322,12 @@ def ruled_grid5mm(filename,
         corners.add(dwg.line(start=(w_px, y_px),
                              end=(w_px - x_px, y_px),
                              class_='ruler'))
-
     return dwg
-    
-    
+
+
 def template_dict(name, filename, icon_code,
                   landscape, categories):
-    """Returns a dict for rM's template.json"""
+    """Returns an entry for remarkable's template.json config file."""
     return {
         'name': name,
         'filename': filename,
@@ -311,7 +342,7 @@ def save_template(svgtpl, name, rmfilename,
                   categories):
     print(f"""
 ##############################################################
-Saving template "{name}"
+Rendering template "{name}"
 * SVG file:     "{rmfilename}.svg"
 * PNG file:     "{rmfilename}.png"
 * JSON snippet: "{rmfilename}.inc.json"
@@ -332,36 +363,34 @@ Saving template "{name}"
     # Save SVG
     svgtpl.save()
     # Convert text to path (to avoid problems with remarkable's PDF export)
+    print('* Converting SVG text to path tags (requires inkscape).')
     subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
     # Export to PNG
+    print('* Converting SVG to PNG (requires inkscape).')
     subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
+
 
 if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
     # be found on reddit: https://www.reddit.com/r/RemarkableTablet/comments/j75nis/reference_image_template_icon_codes_for_23016/
 
-    # 5mm grid
+    # Render the 5mm grid
     save_template(grid5mm('Grid5mm.svg'),
                   name='Grid 5mm', rmfilename='Grid5mm',
                   icon_code_portrait='\ue99e',
                   icon_code_landscape='\ue9fa',
                   categories=['Grids'])
 
-    # Ruler with 5mm grid
-    # save_template(ruled_grid5mm('GridRuler.svg'),
-    #               name='Grid Ruler', rmfilename='GridRuler',
-    #               icon_code_portrait='\\ue99e',
-    #               icon_code_landscape='\\ue9fa',
-    #               categories=['Grids'])
-    #FIXME
+    # Render a 5mm grid with ruler in portrait mode
     save_template(ruled_grid5mm('GridRulerP.svg'),
                   name='Grid Ruler', rmfilename='GridRulerP',
                   icon_code_portrait='\ue99e',
                   icon_code_landscape=None,
                   categories=['Grids'])
+
+    # Render a 5mm grid with ruler in landscape mode
     save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True),
                   name='Grid Ruler', rmfilename='GridRulerLS',
                   icon_code_portrait=None,
                   icon_code_landscape='\ue9fa',
                   categories=['Grids'])
-    

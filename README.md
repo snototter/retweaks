@@ -134,6 +134,7 @@ Ideas, apps and tweaks I'd like to try:
   rm toolchain: https://remarkablewiki.com/devel/qt_creator
 * framebuffer extraction
 * lz4 compression
+* pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
 * low priority: config UI (pyqt5)
   * replace splash screens
   * upload templates

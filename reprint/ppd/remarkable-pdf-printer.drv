@@ -1,0 +1,68 @@
+// CUPS printer driver information file
+//
+// This .drv file is used to compile the .ppd
+// printer description file which is used to
+// set up the remarkable e-ink tablet as a
+// PDF printer
+
+// Include standard font and media definitions
+#include <font.defs>
+#include <media.defs>
+
+//// General printer driver information:
+// Manufacturer (of the printer driver)
+// -> https://www.cups.org/doc/ref-ppdcfile.html#Manufacturer
+Manufacturer "rePrint"
+// Long name & nick name(s)
+// -> https://www.cups.org/doc/ref-ppdcfile.html#ModelName
+//TODO ModelName "reMarkable PDF Printer" "remarkable 2" "rm2"
+ModelName "reMarkable PDF Printer"
+Attribute "NickName" "" "reMarkable PDF"
+Attribute "ShortNickName" "" "reMarkable PDF"
+Version 1.0
+
+
+// Tell the PPD compiler which DDK filters to include
+// -> https://www.cups.org/doc/ref-ppdcfile.html#DriverType
+// TODO custom or ps
+// "custom": Use only filters that are defined in this driver information file
+//DriverType ps
+DriverType custom
+
+
+// The print server/service will only accept PDFs:
+Filter application/pdf 50 -
+
+
+// Support all standard fonts
+// -> https://www.cups.org/doc/ref-ppdcfile.html#Font
+Font *
+
+
+// Supported page sizes
+// -> https://www.cups.org/doc/ref-ppdcfile.html#MediaSize
+#media "remarkable" 157mm 210mm
+// Keep a minimum margin to ensure everything can be displayed
+// -> https://www.cups.org/doc/ref-ppdcfile.html#HWMargins
+//    left bottom right top
+HWMargins 1mm 1mm 1mm 1mm
+*MediaSize remarkable
+MediaSize A4
+MediaSize A5
+
+
+// The e-ink tablet is no color device, obviously.
+// -> https://www.cups.org/doc/ref-ppdcfile.html#ColorModel
+ColorDevice no
+ColorModel Gray/Grayscale w chunky 0
+
+
+// Supported resolutions
+// -> https://www.cups.org/doc/ref-ppdcfile.html#Resolution
+// Black/white (k), 8 bit, 226 dpi, row-count row-feed row-step
+*Resolution k 8 0 0 0 "226dpi/226 DPI"
+
+
+// Output PPD file:
+PCFileName "remarkable-pdf-printer.ppd"
+

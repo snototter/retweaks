@@ -113,7 +113,9 @@ Notes:
 
 # TODOs
 Ideas, apps and tweaks I'd like to try:
-* [ ] Investigate print issues - exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
+* [ ] Investigate print issues
+  * exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
+  * printing from Windows worked nicely
 * Live viewer/digital whiteboard
   * restream seems to work now
   * whiteboard for lectures - full screen app, toggle bg/window transparency

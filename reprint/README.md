@@ -1,5 +1,7 @@
 TODO
 
+Since I wanted to learn how to cross-compile applications for the remarkable2 and liked the simplicity of the [go-based AppSocket printer](https://github.com/Evidlo/remarkable_printer) (leverage native printing capabilities, doesn't need rm cloud), I started working on this c++ IPP server/printing service.
+
 Subfolder `ppd` contains the PostScript Printer Description (`.ppd` file) to install the printer on your host (Add printer > ipp://<IP>:<PORT> > provide PPD)  
 https://www.cups.org/doc/postscript-driver.html
 
@@ -34,11 +36,14 @@ TODOs
     DO POST [/]
     DO POST [/]
     ```
+* [ ] refresh my qt knowledge
 * [ ] cpp/qt ipp server
   * [ ] implement basic server
   * [ ] implement stateless ipp printing
   * [ ] [uuid with cpp](https://stackoverflow.com/a/60198074) vs [qt uuid](https://doc.qt.io/qt-5/quuid.html)
   * [ ] implement status responses
+* [ ] Find out if we can tell xochitl to update the file list without restarting
+* [ ] learn about (and implement) IPP [authentication](https://manuals.ricoh.com/online/RICOH/wsmhlp/m003/en/rt0407.html), most likely via DIGEST
 * Potential networking frameworks:
   * https://github.com/qt-labs/qthttpserver/blob/master/examples/httpserver/simple/main.cpp#L59 (qt cross compilation is what rm does and I can focus on IPP and don't have to worry about tcp & http)
   * https://github.com/sprinfall/webcc  (simple(r) cpp asio framework)

@@ -45,6 +45,7 @@ TODOs
 * [ ] Find out if we can tell xochitl to update the file list without restarting
 * [ ] learn about (and implement) IPP [authentication](https://manuals.ricoh.com/online/RICOH/wsmhlp/m003/en/rt0407.html), most likely via DIGEST
 * Potential networking frameworks:
+  * lgtm https://github.com/etr/libhttpserver
   * https://github.com/qt-labs/qthttpserver/blob/master/examples/httpserver/simple/main.cpp#L59 (qt cross compilation is what rm does and I can focus on IPP and don't have to worry about tcp & http)
   * https://github.com/sprinfall/webcc  (simple(r) cpp asio framework)
   * http://think-async.com/Asio/Download.html  (quite complex at the first glance)

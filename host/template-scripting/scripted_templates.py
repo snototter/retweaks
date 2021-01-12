@@ -44,7 +44,7 @@ def grid5mm(filename):
     dwg.attribs['width'] = f'{w_px}px'
 
     # Add style definitions
-    dwg.defs.add(dwg.style(".grid { stroke: black; stroke-width:1px; }"))
+    dwg.defs.add(dwg.style(".grid { stroke: rgb(128,128,128); stroke-width:1px; }"))
 
     # Background should not be transparent
     dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
@@ -115,10 +115,10 @@ def ruled_grid5mm(filename,
 
     # Add style definitions
     dwg.defs.add(dwg.style("""
-    .grid { stroke: black; stroke-width: 0.5px; }
+    .grid { stroke: rgb(128,128,128); stroke-width: 0.5px; }
     .ruler { stroke: black; stroke-width: 1px; }
     .ruler-major { stroke: black; stroke-width: 3px; }
-    .mark { stroke: black; stroke-width: 2px;}
+    .mark { stroke: rgb(180,180,180); stroke-width: 2px;}
     .txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: central; }
     """))
     # Background should not be transparent to avoid "funny" eraser or export 

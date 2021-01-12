@@ -71,6 +71,7 @@ def ruled_grid5mm(filename,
                   major_tick_len_horz_mm=5.0,
                   major_tick_len_vert_mm=3.5,
                   tick_label_margin_mm=1,
+                  draw_markers=False,
                   invert_vertical_axis=True,
                   font_size_px=21,
                   landscape=False):
@@ -94,6 +95,8 @@ def ruled_grid5mm(filename,
             other configuration, it will be slightly off (search for
             'text rotation' in SVGs to understand why making this
             exact would be overkill).
+
+    :draw_markers: Draw '+' markers at the page and quadrant centers.
 
     :invert_vertical_axis: If True, ruler marks/labels will increase from
             bottom to top (and left to right). Otherwise, ruler marks/labels
@@ -222,27 +225,28 @@ def ruled_grid5mm(filename,
     vruler(w_px, -1)
 
     # Draw '+' marks
-    center_marks = dwg.add(dwg.g(id='marks'))
-    def draw_marker(gcx_mm, gcy_mm):
-        length_mm = 3
-        cx_px = xmm2px(gcx_mm + major_tick_len_vert_mm)
-        cy_px = ymm2px(gcy_mm + major_tick_len_horz_mm)
-        lh_px = xmm2px(length_mm / 2)
-        center_marks.add(dwg.line(start=(cx_px - lh_px, cy_px),
-                                  end=(cx_px + lh_px, cy_px),
-                                  class_='mark'))
-        lh_px = ymm2px(length_mm / 2)
-        center_marks.add(dwg.line(start=(cx_px, cy_px - lh_px),
-                                  end=(cx_px, cy_px + lh_px),
-                                  class_='mark'))
+    if draw_markers:
+        center_marks = dwg.add(dwg.g(id='marks'))
+        def draw_marker(gcx_mm, gcy_mm):
+            length_mm = 3
+            cx_px = xmm2px(gcx_mm + major_tick_len_vert_mm)
+            cy_px = ymm2px(gcy_mm + major_tick_len_horz_mm)
+            lh_px = xmm2px(length_mm / 2)
+            center_marks.add(dwg.line(start=(cx_px - lh_px, cy_px),
+                                    end=(cx_px + lh_px, cy_px),
+                                    class_='mark'))
+            lh_px = ymm2px(length_mm / 2)
+            center_marks.add(dwg.line(start=(cx_px, cy_px - lh_px),
+                                    end=(cx_px, cy_px + lh_px),
+                                    class_='mark'))
 
-    grid_w_mm = w_mm - 2 * major_tick_len_vert_mm
-    grid_h_mm = h_mm - 2 * major_tick_len_horz_mm
-    draw_marker(grid_w_mm/2, grid_h_mm/2)
-    draw_marker(grid_w_mm/4, grid_h_mm/4)
-    draw_marker(3*grid_w_mm/4, grid_h_mm/4)
-    draw_marker(grid_w_mm/4, 3*grid_h_mm/4)
-    draw_marker(3*grid_w_mm/4, 3*grid_h_mm/4)
+        grid_w_mm = w_mm - 2 * major_tick_len_vert_mm
+        grid_h_mm = h_mm - 2 * major_tick_len_horz_mm
+        draw_marker(grid_w_mm/2, grid_h_mm/2)
+        draw_marker(grid_w_mm/4, grid_h_mm/4)
+        draw_marker(3*grid_w_mm/4, grid_h_mm/4)
+        draw_marker(grid_w_mm/4, 3*grid_h_mm/4)
+        draw_marker(3*grid_w_mm/4, 3*grid_h_mm/4)
 
     # Draw diagonals at the 4 courners (non-drawing/grid area)
     corners = dwg.add(dwg.g(id='corner'))

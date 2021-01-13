@@ -113,7 +113,8 @@ Notes:
 
 # TODOs
 Ideas, apps and tweaks I'd like to try:
-* [ ] Check for jagged line issue, try the [recept fix](https://github.com/funkey/recept) (make auto-install script, parametrized with -H(ost) and -b(uffer) size)
+* [ ] Check for jagged line issue, try the [recept fix](https://github.com/funkey/recept) (make auto-install script, parametrized with -H(ost) and -b(uffer) size, to be invoked after firmware upgrade)
+* [ ] Update readme w/ templates caveat: not exported to the cloud - "unable to load document background" within the cloud app
 * [ ] Investigate print issues
   * exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
   * printing from Windows worked nicely

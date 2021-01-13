@@ -4,6 +4,7 @@ templates.json
 custom/suspend-screen-cycler/splash-screens/poweroff.png
 custom/suspend-screen-cycler/splash-screens/suspended.png
 custom/suspend-screen-cycler/*.index
+*.user
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

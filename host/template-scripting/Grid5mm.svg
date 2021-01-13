@@ -24,7 +24,7 @@
      id="defs4">
     <style
        id="style2"
-       type="text/css"><![CDATA[.grid { stroke: rgb(128,128,128); stroke-width:1px; }]]></style>
+       type="text/css"><![CDATA[.grid { stroke: rgb(128,128,128); stroke-width:0.3px; }]]></style>
   </defs>
   <rect
      id="rect6"
@@ -38,305 +38,305 @@
     <path
        id="line8"
        d="M 0,0 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line10"
        d="M 0,44.5714 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line12"
        d="M 0,89.142899 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line14"
        d="M 0,133.71429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line16"
        d="M 0,178.28571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line18"
        d="M 0,222.8571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line20"
        d="M 0,267.42859 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line22"
        d="M 0,312 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line24"
        d="M 0,356.57141 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line26"
        d="M 0,401.14291 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line28"
        d="M 0,445.71429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line30"
        d="M 0,490.28571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line32"
        d="M 0,534.85712 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line34"
        d="M 0,579.42859 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line36"
        d="M 0,624 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line38"
        d="M 0,668.57141 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line40"
        d="M 0,713.14288 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line42"
        d="M 0,757.71429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line44"
        d="M 0,802.28571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line46"
        d="M 0,846.85712 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line48"
        d="M 0,891.42859 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line50"
        d="M 0,936 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line52"
        d="M 0,980.57141 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line54"
        d="M 0,1025.1429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line56"
        d="M 0,1069.7144 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line58"
        d="M 0,1114.2856 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line60"
        d="M 0,1158.8571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line62"
        d="M 0,1203.4286 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line64"
        d="M 0,1248 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line66"
        d="M 0,1292.5714 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line68"
        d="M 0,1337.1429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line70"
        d="M 0,1381.7144 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line72"
        d="M 0,1426.2856 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line74"
        d="M 0,1470.8571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line76"
        d="M 0,1515.4286 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line78"
        d="M 0,1560 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line80"
        d="M 0,1604.5714 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line82"
        d="M 0,1649.1429 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line84"
        d="M 0,1693.7144 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line86"
        d="M 0,1738.2856 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line88"
        d="M 0,1782.8571 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line90"
        d="M 0,1827.4286 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line92"
        d="M 0,1872 H 1404"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
   </g>
   <g
      id="vlines">
     <path
        id="line95"
        d="M 17.885401,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line97"
        d="M 62.598701,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line99"
        d="M 107.3121,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line101"
        d="M 152.0255,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line103"
        d="M 196.73891,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line105"
        d="M 241.45219,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line107"
        d="M 286.16559,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line109"
        d="M 330.879,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line111"
        d="M 375.59241,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line113"
        d="M 420.30569,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line115"
        d="M 465.0191,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line117"
        d="M 509.73251,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line119"
        d="M 554.44592,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line121"
        d="M 599.15918,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line123"
        d="M 643.87262,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line125"
        d="M 688.586,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line127"
        d="M 733.29938,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line129"
        d="M 778.0127,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line131"
        d="M 822.72607,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line133"
        d="M 867.43951,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line135"
        d="M 912.15289,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line137"
        d="M 956.86621,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line139"
        d="M 1001.5796,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line141"
        d="M 1046.293,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line143"
        d="M 1091.0063,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line145"
        d="M 1135.7197,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line147"
        d="M 1180.4331,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line149"
        d="M 1225.1465,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line151"
        d="M 1269.8599,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line153"
        d="M 1314.5732,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line155"
        d="M 1359.2866,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
     <path
        id="line157"
        d="M 1404,0 V 1872"
-       style="stroke:#808080;stroke-width:1px" />
+       style="stroke:#808080;stroke-width:0.30000001px" />
   </g>
 </svg>

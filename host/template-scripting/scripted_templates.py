@@ -44,7 +44,7 @@ def grid5mm(filename):
     dwg.attribs['width'] = f'{w_px}px'
 
     # Add style definitions
-    dwg.defs.add(dwg.style(".grid { stroke: rgb(128,128,128); stroke-width:1px; }"))
+    dwg.defs.add(dwg.style(".grid { stroke: rgb(128,128,128); stroke-width:0.3px; }"))
 
     # Background should not be transparent
     dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
@@ -71,7 +71,8 @@ def ruled_grid5mm(filename,
                   major_tick_len_horz_mm=5.0,
                   major_tick_len_vert_mm=3.5,
                   tick_label_margin_mm=1,
-                  draw_markers=False,
+                  draw_markers=True,
+                  draw_corner_diagonals=False,
                   invert_vertical_axis=True,
                   font_size_px=21,
                   landscape=False):
@@ -98,6 +99,9 @@ def ruled_grid5mm(filename,
 
     :draw_markers: Draw '+' markers at the page and quadrant centers.
 
+    :draw_corner_diagonals: Draw diagonals in the corners (where the
+            rulers overlap).
+
     :invert_vertical_axis: If True, ruler marks/labels will increase from
             bottom to top (and left to right). Otherwise, ruler marks/labels
             increase top to bottom (and left to right, too).
@@ -118,10 +122,10 @@ def ruled_grid5mm(filename,
 
     # Add style definitions
     dwg.defs.add(dwg.style("""
-    .grid { stroke: rgb(128,128,128); stroke-width: 0.5px; }
+    .grid { stroke: rgb(128,128,128); stroke-width: 0.3px; }
     .ruler { stroke: black; stroke-width: 1px; }
     .ruler-major { stroke: black; stroke-width: 3px; }
-    .mark { stroke: rgb(180,180,180); stroke-width: 2px;}
+    .mark { stroke: rgb(128,128,128); stroke-width: 2px;}
     .txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #808080; dominant-baseline: central; }
     """))
     # Background should not be transparent to avoid "funny" eraser or export 
@@ -264,17 +268,19 @@ def ruled_grid5mm(filename,
     def mm2px(pt_mm):
         return (xmm2px(pt_mm[0]), ymm2px(pt_mm[1]))
 
-    for ln in lines:
-        corners.add(dwg.line(start=mm2px(ln[0]),
-                             end=mm2px(ln[1]),
-                             class_='ruler'))
+    if draw_corner_diagonals:
+        for ln in lines:
+            corners.add(dwg.line(start=mm2px(ln[0]),
+                                end=mm2px(ln[1]),
+                                class_='ruler'))
 
     # "Neatification" aka overkill at the corners:
     for x_mm in range(-1, -int(major_tick_len_vert_mm + 0.5), -1):
         # Don't forget: we have an offset between pixel 0 and drawing area/grid
         xpos = x_mm + major_tick_len_vert_mm
         # Length of tick via similar triangles
-        y_mm = xpos * major_tick_len_horz_mm / major_tick_len_vert_mm - 0.8
+        y_mm = xpos * major_tick_len_horz_mm / major_tick_len_vert_mm -\
+            (0.8 if draw_corner_diagonals else 0)
         if y_mm < 0.3:
             continue
         # Top-left

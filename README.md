@@ -142,3 +142,5 @@ Ideas, apps and tweaks I'd like to try:
   * replace splash screens
   * upload templates
 * low priority: wacom input device
+* Templates: PNG with utility markers, SVG without (for export)
+

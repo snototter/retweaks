@@ -5,6 +5,7 @@ custom/suspend-screen-cycler/splash-screens/poweroff.png
 custom/suspend-screen-cycler/splash-screens/suspended.png
 custom/suspend-screen-cycler/*.index
 *.user
+tryouts/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

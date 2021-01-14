@@ -39,9 +39,28 @@ Customization steps I performed after completing the rM tutorial:
   * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` for me. **TODO:** check if DST switch works (should as `/usr/share/zoneinfo/CET` contains the jump dates between `CET` and `CEST`)
   * Set the timezone on the tablet: `timedatectl set-timezone CET`
 
+## Native Printing
+Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) and add the device as AppSocket/JetDirect printer.
+Caveats:
+* No authentication - anyone on the network could print (if IP is known and they can find a suitable PPD).
+* PDF titles aren't working in my setup - all printed files are entitled "printed" on the remarkable
+* The application is active listening on the 9100 socket - should use [socket activation](https://github.com/Evidlo/remarkable_printer) instead.
+* Useful extensions (TODOs):
+  * [Requires Go proficiency] Specify output directory (`inbox` or similar) and save there - just requires adjusting the template.  
+    **However**, the `inbox` directory must exist. Thus, we would need to parse the `.metadata` files, build the internal file structure and then check if the "folder" exists (and create if needed).
+  * Include date/time string in default title.
 
-## Personalization
-* TODO summarize (copy `~/custom`, install services, upload templates)
+## UI Improvements
+Install the binary [patches by ddvk](https://github.com/ddvk/remarkable-hacks).
+
+
+## RM as Whiteboard
+restream 11.5G per 3 minutes of whiteboarding...
+[rmview](https://github.com/bordaigorl/rmview)
+damage tracking
+copy rm vnc
+ssh into tablet and chmod +x
+
 
 
 # Backup Important Locations
@@ -53,8 +72,8 @@ Important locations and files for backing up:
   To back up:  
   `$ scp root@<HOSTNAME>:~/.config/remarkable/xochitl.conf rm2-backup/`
 
-
-# Customize Splash Screens
+# Customization
+## Splash Screens
 Splash screens are located at `/usr/share/remarkable`.  
 Information about the initial files (as of firmware version 2.5) via `file`:
 * `batteryempty.png`: PNG image data, 1404 x 1872, 8-bit grayscale, non-interlaced
@@ -78,7 +97,7 @@ My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically
 * To uninstall this service, run `./99-uninstall.sh` - **Note:** this will not restore the original suspend screen.
 
 
-# Customize Templates
+## Templates
 Templates are located at `/usr/share/remarkable/templates`. To back them up (as of firmware version 2.5):  
 `scp -r root@<HOSTNAME>:/usr/share/remarkable/templates rm2-backup/templates/`
 
@@ -144,4 +163,5 @@ Ideas, apps and tweaks I'd like to try:
   * upload templates
 * low priority: wacom input device
 * Templates: PNG with utility markers, SVG without (for export)
+* 
 

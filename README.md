@@ -40,7 +40,15 @@ Customization steps I performed after completing the rM tutorial:
   * Set the timezone on the tablet: `timedatectl set-timezone CET`
 
 ## Native Printing
-Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) and add the device as AppSocket/JetDirect printer.
+Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer).  
+```bash
+ssh <HOSTNAME>
+wget -O - http://raw.githubusercontent.com/Evidlo/remarkable_printer/master/install.sh | sh
+```
+Then add the device as AppSocket printer:
+* `System > Printers > Add Printer`
+* Add a network printer: `AppSocket/HP JetDirect` (hostname/IP and default port number 9100).
+* Provide PPD file (my custom PPD defines a media size of 157x210 mm instead of [evidlo's](https://github.com/Evidlo/remarkable_printer/blob/master/remarkable.ppd) 155x205)
 Caveats:
 * No authentication - anyone on the network could print (if IP is known and they can find a suitable PPD).
 * PDF titles aren't working in my setup - all printed files are entitled "printed" on the remarkable
@@ -51,12 +59,28 @@ Caveats:
   * Include date/time string in default title.
 
 ## UI Improvements
-Install the binary [patches by ddvk](https://github.com/ddvk/remarkable-hacks).
-
+* Install the [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) for really useful interface features.
+  ```bash
+  $ ssh <HOSTNAME>
+  # sh -c "$(wget https://raw.githubusercontent.com/ddvk/remarkable-hacks/master/patch.sh -O-)"
+  ```
+* Install [funkey's low pass filter](https://github.com/funkey/recept) to fix jagged lines.
+  ```bash
+  $ cd tryouts
+  $ git clone https://github.com/funkey/recept
+  $ cd recept
+  $ ./install.sh
+  ```
 
 ## RM as Whiteboard
+Both [restream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
+However, rmview already provides all features I need for a digital whiteboard (auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.)
+TODO pointer position could be used to implement a wacom input device (or is it baked into vnc)?
+
+TODO measure bandwidth rmview
+doc install instructions (virtualenv)
 restream 11.5G per 3 minutes of whiteboarding...
-[rmview](https://github.com/bordaigorl/rmview)
+
 damage tracking
 copy rm vnc
 ssh into tablet and chmod +x
@@ -132,18 +156,22 @@ Notes:
 
 # TODOs
 Ideas, apps and tweaks I'd like to try:
-* [ ] Check for jagged line issue, try the [recept fix](https://github.com/funkey/recept) (make auto-install script, parametrized with -H(ost) and -b(uffer) size, to be invoked after firmware upgrade)
+* [ ] Grid templates: PNG with utility markers, SVG without (for export)
+* [ ] Gardening calendar template
 * [ ] Update readme w/ templates caveat: not exported to the cloud - "unable to load document background" within the cloud app
 * [ ] Investigate print issues
-  * exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
-  * printing from Windows worked nicely
-* Live viewer/digital whiteboard
-  * restream seems to work now
-  * whiteboard for lectures - full screen app, toggle bg/window transparency
-    * first, get streaming done
-    * second, toggle portrait/landscape
-    * third: toggle transparency (might not be possible https://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5), alternatively: make a screenshot to draw on
-* reprint
+  * On Ubuntu 18.04 exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
+  * Printing from Windows worked nicely
+* cross compilation  
+  https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
+  rm toolchain: https://remarkablewiki.com/devel/qt_creator
+* pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
+* low priority: config UI (pyqt5)
+  * replace splash screens
+  * upload templates
+  * replace suspend screen service by UI (?)
+* low priority: wacom input device
+* lowest priority: reprint
   * ipp print server (cpp tcp)
   * pdf support (size conversion ??)
   https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
@@ -152,16 +180,4 @@ Ideas, apps and tweaks I'd like to try:
     [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud)  
     [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)  
     [python minimal ipp server](https://github.com/h2g2bob/ipp-server)
-* cross compilation  
-  https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
-  rm toolchain: https://remarkablewiki.com/devel/qt_creator
-* framebuffer extraction
-* lz4 compression
-* pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
-* low priority: config UI (pyqt5)
-  * replace splash screens
-  * upload templates
-* low priority: wacom input device
-* Templates: PNG with utility markers, SVG without (for export)
-* 
 

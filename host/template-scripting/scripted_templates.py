@@ -32,6 +32,7 @@ def rm2dimensions():
 def grid5mm(filename):
     """
     Renders a 5x5 mm grid.
+
     :filename: Output filename of the SVG.
     """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
@@ -49,21 +50,52 @@ def grid5mm(filename):
     # Background should not be transparent
     dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
 
+    # Millimeter to pixel conversion
+    def ymm2px(y_mm):
+        return y_mm / h_mm * h_px
+
+    def xmm2px(x_mm):
+        return x_mm / w_mm * w_px
+
     # Horizontal lines
     grid = dwg.add(dwg.g(id='hlines'))
     for y_mm in range(0, h_mm+1, 5):
-        y_px = y_mm / h_mm * h_px
+        y_px = ymm2px(y_mm)
         grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
                           class_='grid'))
 
-    # Vertical lines (I prefer centering them)
+    # Vertical lines (shift to the right, to have the
+    # rightmost line aligned with the display border)
     grid = dwg.add(dwg.g(id='vlines'))
     offset_mm = w_mm % 5
-    offset_px = offset_mm / w_mm * w_px
     for x_mm in range(0, w_mm+1, 5):
-        x_px = x_mm / w_mm * w_px + offset_px
+        x_px = xmm2px(x_mm + offset_mm)
         grid.add(dwg.line(start=(x_px, 0), end=(x_px, h_px),
                           class_='grid'))
+    
+    # Draw '+' marks
+    if draw_markers:
+        center_marks = dwg.add(dwg.g(id='marks'))
+        def draw_marker(gcx_mm, gcy_mm):
+            length_mm = 3
+            cx_px = xmm2px(gcx_mm)
+            cy_px = ymm2px(gcy_mm)
+            lh_px = xmm2px(length_mm / 2)
+            center_marks.add(dwg.line(start=(cx_px - lh_px, cy_px),
+                                    end=(cx_px + lh_px, cy_px),
+                                    class_='mark'))
+            lh_px = ymm2px(length_mm / 2)
+            center_marks.add(dwg.line(start=(cx_px, cy_px - lh_px),
+                                    end=(cx_px, cy_px + lh_px),
+                                    class_='mark'))
+
+        grid_w_mm = (w_mm // 5) * 5
+        grid_h_mm = h_mm
+        draw_marker(grid_w_mm/2 + offset_mm, grid_h_mm/2)
+        draw_marker(grid_w_mm/4 + offset_mm, grid_h_mm/4)
+        draw_marker(3*grid_w_mm/4 + offset_mm, grid_h_mm/4)
+        draw_marker(grid_w_mm/4 + offset_mm, 3*grid_h_mm/4)
+        draw_marker(3*grid_w_mm/4 + offset_mm, 3*grid_h_mm/4)
     return dwg
 
 
@@ -335,6 +367,87 @@ def ruled_grid5mm(filename,
     return dwg
 
 
+def gardening_planner(filename, font_size_px=42):
+    #TODO
+    """
+    Renders my annual gardening task list/planner.
+
+    :filename: Output filename of the SVG.
+    """
+    w_px, h_px, w_mm, h_mm = rm2dimensions()
+
+    dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
+                           profile='tiny', debug=False)
+    # Height/width weren't set properly (my SVGs had 100% instead of the correct
+    # dimensions). Thus, overwrite the attributes manually:
+    dwg.attribs['height'] = f'{h_px}px'
+    dwg.attribs['width'] = f'{w_px}px'
+
+    # Add style definitions
+    dwg.defs.add(dwg.style("""
+.grid { stroke: rgb(128,128,128); stroke-width:3px; }
+.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
+"""))
+
+    # Background should not be transparent
+    dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), class_='grid', fill='white'))
+
+    # Millimeter to pixel conversion
+    def ymm2px(y_mm):
+        return y_mm / h_mm * h_px
+
+    def xmm2px(x_mm):
+        return x_mm / w_mm * w_px
+
+    # Horizontal lines
+    grid = dwg.add(dwg.g(id='hlines'))
+    title_height_mm = 8
+    month_height_mm = (h_mm - title_height_mm) / 6
+    # month_dividers = range(10, h_mm+1, month_height_mm)
+    y_mm = title_height_mm
+    while y_mm < h_mm:
+        y_px = ymm2px(y_mm)
+        grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
+                          class_='grid'))
+        y_mm += month_height_mm
+
+    # Vertical lines
+    grid = dwg.add(dwg.g(id='vlines'))
+    month_title_height_mm = 8
+    for x_mm in [month_title_height_mm, w_mm/2, w_mm-month_title_height_mm]:
+        x_px = xmm2px(x_mm)
+        grid.add(dwg.line(start=(x_px, ymm2px(title_height_mm)), end=(x_px, h_px),
+                          class_='grid'))
+    
+    dwg.add(dwg.text('Gartenplaner',
+                     insert=(xmm2px(w_mm/2), ymm2px(title_height_mm/2)),
+                     class_='txt',
+                     text_anchor='middle'))
+    month_names = ['Jänner', 'Feber', 'März', 'April', 'Mai', 'Juni',
+                   'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    for idx in range(6):
+        y_px = ymm2px(title_height_mm + (idx + 0.5) * month_height_mm)
+        x_px = xmm2px(month_title_height_mm/2)
+        txttag = dwg.text(month_names[idx],
+                          insert=(x_px, y_px),
+                          class_='txt',
+                          text_anchor='middle')
+        txttag.rotate(angle=-90,
+                      center=(x_px, y_px))
+        dwg.add(txttag)
+
+        x_px = xmm2px(w_mm - month_title_height_mm/2)
+        txttag = dwg.text(month_names[idx + 6],
+                          insert=(x_px, y_px),
+                          class_='txt',
+                          text_anchor='middle')
+        txttag.rotate(angle=-90,
+                      center=(x_px, y_px))
+        dwg.add(txttag)
+    return dwg
+
+
+
 def template_dict(name, filename, icon_code,
                   landscape, categories):
     """Returns an entry for remarkable's template.json config file."""
@@ -347,7 +460,7 @@ def template_dict(name, filename, icon_code,
     }
 
 
-def save_template(svgtpl, name, rmfilename,
+def save_template(svgtpl_export, svgtpl_display, name, rmfilename,
                   icon_code_portrait, icon_code_landscape,
                   categories):
     print(f"""
@@ -370,37 +483,60 @@ Rendering template "{name}"
     with open(f'{rmfilename}.inc.json', 'w') as jif:
         json.dump(tpl_desc, jif, indent=2)
         jif.write('\n')
+    #### Export to PNG first, if we have a separate display template
+    if svgtpl_display is not None:
+        # Save the corresponding SVG
+        print('* Saving the display template as SVG')
+        svgtpl_display.save()
+        # Convert text to path
+        print('* Converting SVG text to path tags (requires inkscape).')
+        subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
+        # Export to PNG
+        print('* Converting SVG to PNG (requires inkscape).')
+        subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
+
     # Save SVG
-    svgtpl.save()
+    svgtpl_export.save()
     # Convert text to path (to avoid problems with remarkable's PDF export)
     print('* Converting SVG text to path tags (requires inkscape).')
     subprocess.call(f'inkscape "{rmfilename}.svg" --export-text-to-path --export-plain-svg "{rmfilename}.svg"', shell=True)
-    # Export to PNG
-    print('* Converting SVG to PNG (requires inkscape).')
-    subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
+    # Export to PNG (if there's no separate display template)
+    if svgtpl_display is None:
+        print('* Converting SVG to PNG (requires inkscape).')
+        subprocess.call(f'inkscape -z -f "{rmfilename}.svg" -w 1404 -h 1872 -j -e "{rmfilename}".png', shell=True)
 
 
 if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
     # be found on reddit: https://www.reddit.com/r/RemarkableTablet/comments/j75nis/reference_image_template_icon_codes_for_23016/
 
-    # Render the 5mm grid
-    save_template(grid5mm('Grid5mm.svg'),
-                  name='Grid 5mm', rmfilename='Grid5mm',
-                  icon_code_portrait='\ue99e',
-                  icon_code_landscape='\ue9fa',
-                  categories=['Grids'])
+    # # Render the 5mm grid
+    # save_template(grid5mm('Grid5mm.svg'), None,
+    #               name='Grid 5mm', rmfilename='Grid5mm',
+    #               icon_code_portrait='\ue99e',
+    #               icon_code_landscape='\ue9fa',
+    #               categories=['Grids'])
 
-    # Render a 5mm grid with ruler in portrait mode
-    save_template(ruled_grid5mm('GridRulerP.svg'),
-                  name='Grid Ruler', rmfilename='GridRulerP',
-                  icon_code_portrait='\ue99e',
+    # # Render a 5mm grid with ruler in portrait mode
+    # save_template(ruled_grid5mm('GridRulerP.svg', draw_markers=False),
+    #               ruled_grid5mm('GridRulerP.svg', draw_markers=True),
+    #               name='Grid Ruler', rmfilename='GridRulerP',
+    #               icon_code_portrait='\ue99e',
+    #               icon_code_landscape=None,
+    #               categories=['Grids'])
+
+    # # Render a 5mm grid with ruler in landscape mode
+    # save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=False),
+    #               ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=True),
+    #               name='Grid Ruler', rmfilename='GridRulerLS',
+    #               icon_code_portrait=None,
+    #               icon_code_landscape='\ue9fa',
+    #               categories=['Grids'])
+    
+    save_template(gardening_planner('GardeningP.svg'),
+                  None,
+                  name='Gardening', rmfilename='GardeningP',
+                  icon_code_portrait='\ue98f',
                   icon_code_landscape=None,
-                  categories=['Grids'])
-
-    # Render a 5mm grid with ruler in landscape mode
-    save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True),
-                  name='Grid Ruler', rmfilename='GridRulerLS',
-                  icon_code_portrait=None,
-                  icon_code_landscape='\ue9fa',
-                  categories=['Grids'])
+                  categories=['Life/organize'])
+    

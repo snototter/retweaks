@@ -29,7 +29,7 @@ Customization steps I performed after completing the rM tutorial:
       User root
       IdentityFile ~/.ssh/<KEYNAME>
     ```
-  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device (I'm a simple guy, I like simple UI)
+  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device (I'm a simple guy, I like simple UIs)
 * Change command aliases via `~/.bashrc`:
   ```bash
   alias ll='ls -la`
@@ -73,18 +73,35 @@ Caveats:
   ```
 
 ## RM as Whiteboard
-Both [restream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
-However, rmview already provides all features I need for a digital whiteboard (auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.)
-TODO pointer position could be used to implement a wacom input device (or is it baked into vnc)?
+In my tests, both [reStream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
+However, rmview already provides all features I need for a digital whiteboard - like auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.
+Additionally, it uses damage tracking to send only necessary updates and thus, reduces the required bandwidth.
+Thus, I'll stick with (the VNC-based) `rmview`:
+* Set up `rmview` on the host:
+  * Prepare PyQt5-based UI on the host:
+    ```bash
+    $ ./host/whiteboard/install_rmview_host.sh
+    ```
+  * Optionally, add a launcher entry in your start menu, either via your favorite menu editor or using a `rmview.desktop` like:
+    ```ini
+    [Desktop Entry]
+    Name=rmview
+    Comment=remarkable liveview
+    Exec=<PATH/TO/VIRTUALENV>/bin/python -m rmview
+    Type=Application
+    Terminal=false
+    Icon=<PATH/TO/RETWEAKS/REPO>/host/whiteboard/launcher.svg
+    Categories=Education;
+    StartupWMClass=rmview
+    ```  
+    A simple [launcher icon](./host/whiteboard/launcher.svg) is provided.
+* Then, copy the included [rM-vnc-server](https://github.com/pl-semiotics/rM-vnc-server) to the device and ensure it is executable:
+  ```bash
+  $ scp host/whiteboard/rmview-2.1/bin/rM2-vnc-server-standalone <HOSTNAME>:rM-vnc-server-standalone
 
-TODO measure bandwidth rmview
-doc install instructions (virtualenv)
-restream 11.5G per 3 minutes of whiteboarding...
-
-damage tracking
-copy rm vnc
-ssh into tablet and chmod +x
-
+  $ ssh <HOSTNAME>
+  # chmod +x ./rM-vnc-server-standalone
+  ```
 
 
 # Backup Important Locations
@@ -180,4 +197,6 @@ Ideas, apps and tweaks I'd like to try:
     [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud)  
     [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)  
     [python minimal ipp server](https://github.com/h2g2bob/ipp-server)
+* [ ] Pointer position (rmview/rm-vnc-server) could be used to implement a wacom input device?
+* [ ] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
 

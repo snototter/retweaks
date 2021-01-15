@@ -6,6 +6,7 @@ custom/suspend-screen-cycler/splash-screens/suspended.png
 custom/suspend-screen-cycler/*.index
 *.user
 tryouts/*
+host/whiteboard/rmview*/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

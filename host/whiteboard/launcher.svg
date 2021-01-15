@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="512pt"
+   height="512pt"
+   viewBox="0 0 512 512"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg10"
+   sodipodi:docname="rm.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     id="namedview12"
+     showgrid="false"
+     inkscape:zoom="0.6257895"
+     inkscape:cx="262.93053"
+     inkscape:cy="128.20082"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.14, written by Peter Selinger 2001-2017
+<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title></dc:title>
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1"
+     style="display:inline"
+     transform="translate(0,112)">
+    <circle
+       style="fill:#d40000;fill-opacity:1;stroke:#000050;stroke-width:0.91162527;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:54.90000153;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path825-3"
+       cx="398.30508"
+       cy="205.93222"
+       r="61.646706" />
+    <path
+       style="fill:none;stroke:#d40000;stroke-width:7.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 432.51306,218.06646 c 0,0 -204.30613,-11.61215 -144.27579,35.78498 60.03035,47.39713 209.04493,101.56666 30.60765,85.37424 -178.43729,-16.19243 -187.0208,-54.94949 -187.0208,-54.94949"
+       id="path875"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     transform="translate(0,112)">
+    <g
+       style="fill:#000000;stroke:none"
+       transform="matrix(0.23216304,0,0,-0.23216304,-210.95339,561.99418)"
+       id="g8-6">
+      <path
+         inkscape:connector-curvature="0"
+         d="m 1690,2424 c 0,-3 18,-31 40,-63 l 40,-57 v -351 -350 l -50,-47 -49,-46 h 147 147 l -48,46 -47,45 2,275 3,274 150,-287 c 83,-158 155,-288 161,-290 6,-2 83,130 170,293 l 159,296 3,-278 3,-279 -52,-47 -53,-48 h 210 l 209,1 -52,49 -53,49 v 358 357 l 52,53 52,53 h -140 -141 l -92,-177 c -50,-98 -115,-224 -144,-280 -29,-57 -55,-103 -58,-103 -4,0 -73,126 -154,280 l -148,280 h -133 c -74,0 -134,-3 -134,-6 z"
+         id="path4-7" />
+      <path
+         inkscape:connector-curvature="0"
+         d="m 1483,2063 -63,-64 v 60 c 0,34 -4,61 -10,61 -5,0 -54,-21 -107,-46 -54,-25 -109,-51 -123,-56 l -25,-10 38,-32 39,-32 -2,-180 -1,-179 -36,-37 -37,-38 h 194 c 216,1 212,-2 110,60 l -40,24 2,176 3,175 29,14 c 25,12 36,11 80,-1 28,-9 58,-18 66,-22 12,-4 20,12 39,72 13,42 26,82 28,88 4,11 -63,32 -102,32 -11,0 -47,-28 -82,-65 z"
+         id="path6-5" />
+    </g>
+  </g>
+</svg>

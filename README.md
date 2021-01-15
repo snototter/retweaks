@@ -59,7 +59,7 @@ Caveats:
   * Include date/time string in default title.
 
 ## UI Improvements
-* Install the [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) for really useful interface features.
+* Install [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) for really useful interface features.
   ```bash
   $ ssh <HOSTNAME>
   # sh -c "$(wget https://raw.githubusercontent.com/ddvk/remarkable-hacks/master/patch.sh -O-)"

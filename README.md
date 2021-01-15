@@ -40,7 +40,7 @@ Customization steps I performed after completing the rM tutorial:
   * Set the timezone on the tablet: `timedatectl set-timezone CET`
 
 ## Native Printing
-Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer).  
+Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) to be able to print directly to the device, without accessing the rM cloud.  
 ```bash
 ssh <HOSTNAME>
 wget -O - http://raw.githubusercontent.com/Evidlo/remarkable_printer/master/install.sh | sh
@@ -72,7 +72,7 @@ Caveats:
   $ ./install.sh
   ```
 
-## RM as Whiteboard
+## Use the Tablet as a Whiteboard
 In my tests, both [reStream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
 However, rmview already provides all features I need for a digital whiteboard - like auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.
 Additionally, it uses damage tracking to send only necessary updates and thus, reduces the required bandwidth.
@@ -113,7 +113,7 @@ Important locations and files for backing up:
   To back up:  
   `$ scp root@<HOSTNAME>:~/.config/remarkable/xochitl.conf rm2-backup/`
 
-# Customization
+# Personalization
 ## Splash Screens
 Splash screens are located at `/usr/share/remarkable`.  
 Information about the initial files (as of firmware version 2.5) via `file`:

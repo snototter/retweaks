@@ -401,23 +401,40 @@ def gardening_planner(filename, font_size_px=42):
 
     # Horizontal lines
     grid = dwg.add(dwg.g(id='hlines'))
-    title_height_mm = 8
-    month_height_mm = (h_mm - title_height_mm) / 6
-    # month_dividers = range(10, h_mm+1, month_height_mm)
-    y_mm = title_height_mm
-    while y_mm < h_mm:
+    title_height_mm = 6
+    month_title_height_mm = 6.5
+    guide_cell_size_mm = 4
+    evenly_spaced = (h_mm - title_height_mm) / 6
+    month_height_mm = (evenly_spaced // guide_cell_size_mm) * guide_cell_size_mm
+    for idx in range(6):
+        y_mm = title_height_mm + idx * month_height_mm
         y_px = ymm2px(y_mm)
         grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
                           class_='grid'))
-        y_mm += month_height_mm
+    # # month_dividers = range(10, h_mm+1, month_height_mm)
+    # y_mm = title_height_mm
+    # while y_mm < h_mm:
+    #     y_px = ymm2px(y_mm)
+    #     grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
+    #                       class_='grid'))
+    #     y_mm += month_height_mm
 
     # Vertical lines
     grid = dwg.add(dwg.g(id='vlines'))
-    month_title_height_mm = 8
     for x_mm in [month_title_height_mm, w_mm/2, w_mm-month_title_height_mm]:
         x_px = xmm2px(x_mm)
         grid.add(dwg.line(start=(x_px, ymm2px(title_height_mm)), end=(x_px, h_px),
                           class_='grid'))
+    
+    y_mm = title_height_mm + guide_cell_size_mm
+    while y_mm <= h_mm - guide_cell_size_mm:
+        y_px = ymm2px(y_mm)
+        x_mm = month_title_height_mm + guide_cell_size_mm
+        while x_mm <= w_mm - month_title_height_mm - guide_cell_size_mm:
+            x_px = xmm2px(x_mm)
+            grid.add(dwg.circle(center=(x_px, y_px), r=0.5, class_='grid'))
+            x_mm += guide_cell_size_mm
+        y_mm += guide_cell_size_mm
     
     dwg.add(dwg.text('Gartenplaner',
                      insert=(xmm2px(w_mm/2), ymm2px(title_height_mm/2)),

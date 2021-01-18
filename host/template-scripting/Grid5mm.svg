@@ -24,9 +24,7 @@
      id="defs4">
     <style
        id="style2"
-       type="text/css"><![CDATA[
-.grid { stroke: rgb(128,128,128); stroke-width:0.3px; }
-.mark { stroke: rgb(128,128,128); stroke-width: 2px; }]]></style>
+       type="text/css"><![CDATA[.grid { stroke: rgb(128,128,128); stroke-width:0.3px; }]]></style>
   </defs>
   <rect
      id="rect6"

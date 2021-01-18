@@ -29,11 +29,15 @@ def rm2dimensions():
     return w_px, h_px, w_mm, h_mm
 
 
-def grid5mm(filename):
+def grid5mm(filename, draw_markers=False):
     """
     Renders a 5x5 mm grid.
 
     :filename: Output filename of the SVG.
+
+    :draw_markers: Draw '+' markers at the page and quadrant centers.
+                   These markers will not be aligned with the grid corners
+                   due to the display dimensions!
     """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
@@ -368,11 +372,12 @@ def ruled_grid5mm(filename,
 
 
 def gardening_planner(filename, font_size_px=42):
-    #TODO
     """
-    Renders my annual gardening task list/planner.
+    Renders a quarterly gardening task list/planner.
 
     :filename: Output filename of the SVG.
+
+    :font_size_px: Font size of the title in pixels.
     """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
@@ -398,71 +403,50 @@ def gardening_planner(filename, font_size_px=42):
 
     def xmm2px(x_mm):
         return x_mm / w_mm * w_px
+    
+    # Size definitions
+    title_height_mm = 10
+    month_title_height_mm = 7
+    guide_cell_size_mm = 5
 
     # Horizontal lines
     grid = dwg.add(dwg.g(id='hlines'))
-    title_height_mm = 6
-    month_title_height_mm = 6.5
-    guide_cell_size_mm = 4
-    evenly_spaced = (h_mm - title_height_mm) / 6
+    evenly_spaced = (h_mm - title_height_mm) / 3
     month_height_mm = (evenly_spaced // guide_cell_size_mm) * guide_cell_size_mm
-    for idx in range(6):
-        y_mm = title_height_mm + idx * month_height_mm
+    hline_positions = [0,
+        title_height_mm,
+        title_height_mm + month_height_mm,
+        title_height_mm + 2 * month_height_mm,
+        h_mm]
+    for y_mm in hline_positions:
         y_px = ymm2px(y_mm)
         grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
                           class_='grid'))
-    # # month_dividers = range(10, h_mm+1, month_height_mm)
-    # y_mm = title_height_mm
-    # while y_mm < h_mm:
-    #     y_px = ymm2px(y_mm)
-    #     grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
-    #                       class_='grid'))
-    #     y_mm += month_height_mm
-
+    
     # Vertical lines
     grid = dwg.add(dwg.g(id='vlines'))
-    for x_mm in [month_title_height_mm, w_mm/2, w_mm-month_title_height_mm]:
+    for x_mm in [0, w_mm-month_title_height_mm, w_mm]:
         x_px = xmm2px(x_mm)
         grid.add(dwg.line(start=(x_px, ymm2px(title_height_mm)), end=(x_px, h_px),
                           class_='grid'))
     
+    # Dots
     y_mm = title_height_mm + guide_cell_size_mm
     while y_mm <= h_mm - guide_cell_size_mm:
         y_px = ymm2px(y_mm)
-        x_mm = month_title_height_mm + guide_cell_size_mm
-        while x_mm <= w_mm - month_title_height_mm - guide_cell_size_mm:
-            x_px = xmm2px(x_mm)
-            grid.add(dwg.circle(center=(x_px, y_px), r=0.5, class_='grid'))
-            x_mm += guide_cell_size_mm
+        if all([abs(y_mm - y) > 1 for y in hline_positions]):
+            x_mm = guide_cell_size_mm
+            while x_mm <= w_mm - month_title_height_mm - guide_cell_size_mm:
+                x_px = xmm2px(x_mm)
+                grid.add(dwg.circle(center=(x_px, y_px), r=0.5, class_='grid'))
+                x_mm += guide_cell_size_mm
         y_mm += guide_cell_size_mm
     
     dwg.add(dwg.text('Gartenplaner',
                      insert=(xmm2px(w_mm/2), ymm2px(title_height_mm/2)),
                      class_='txt',
                      text_anchor='middle'))
-    month_names = ['Jänner', 'Feber', 'März', 'April', 'Mai', 'Juni',
-                   'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-    for idx in range(6):
-        y_px = ymm2px(title_height_mm + (idx + 0.5) * month_height_mm)
-        x_px = xmm2px(month_title_height_mm/2)
-        txttag = dwg.text(month_names[idx],
-                          insert=(x_px, y_px),
-                          class_='txt',
-                          text_anchor='middle')
-        txttag.rotate(angle=-90,
-                      center=(x_px, y_px))
-        dwg.add(txttag)
-
-        x_px = xmm2px(w_mm - month_title_height_mm/2)
-        txttag = dwg.text(month_names[idx + 6],
-                          insert=(x_px, y_px),
-                          class_='txt',
-                          text_anchor='middle')
-        txttag.rotate(angle=-90,
-                      center=(x_px, y_px))
-        dwg.add(txttag)
     return dwg
-
 
 
 def template_dict(name, filename, icon_code,
@@ -527,29 +511,30 @@ if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
     # be found on reddit: https://www.reddit.com/r/RemarkableTablet/comments/j75nis/reference_image_template_icon_codes_for_23016/
 
-    # # Render the 5mm grid
-    # save_template(grid5mm('Grid5mm.svg'), None,
-    #               name='Grid 5mm', rmfilename='Grid5mm',
-    #               icon_code_portrait='\ue99e',
-    #               icon_code_landscape='\ue9fa',
-    #               categories=['Grids'])
+    # Render the 5mm grid
+    save_template(grid5mm('Grid5mm.svg'), None,
+                  name='Grid 5mm', rmfilename='Grid5mm',
+                  icon_code_portrait='\ue99e',
+                  icon_code_landscape='\ue9fa',
+                  categories=['Grids'])
 
-    # # Render a 5mm grid with ruler in portrait mode
-    # save_template(ruled_grid5mm('GridRulerP.svg', draw_markers=False),
-    #               ruled_grid5mm('GridRulerP.svg', draw_markers=True),
-    #               name='Grid Ruler', rmfilename='GridRulerP',
-    #               icon_code_portrait='\ue99e',
-    #               icon_code_landscape=None,
-    #               categories=['Grids'])
+    # Render a 5mm grid with ruler in portrait mode
+    save_template(ruled_grid5mm('GridRulerP.svg', draw_markers=False),
+                  ruled_grid5mm('GridRulerP.svg', draw_markers=True),
+                  name='Grid Ruler', rmfilename='GridRulerP',
+                  icon_code_portrait='\ue99e',
+                  icon_code_landscape=None,
+                  categories=['Grids'])
 
-    # # Render a 5mm grid with ruler in landscape mode
-    # save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=False),
-    #               ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=True),
-    #               name='Grid Ruler', rmfilename='GridRulerLS',
-    #               icon_code_portrait=None,
-    #               icon_code_landscape='\ue9fa',
-    #               categories=['Grids'])
+    # Render a 5mm grid with ruler in landscape mode
+    save_template(ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=False),
+                  ruled_grid5mm('GridRulerLS.svg', landscape=True, draw_markers=True),
+                  name='Grid Ruler', rmfilename='GridRulerLS',
+                  icon_code_portrait=None,
+                  icon_code_landscape='\ue9fa',
+                  categories=['Grids'])
     
+    # Render a gardening plan/todo list
     save_template(gardening_planner('GardeningP.svg'),
                   None,
                   name='Gardening', rmfilename='GardeningP',

@@ -443,7 +443,11 @@ def gardening_planner(filename, font_size_px=42):
         y_mm += guide_cell_size_mm
     
     dwg.add(dwg.text('Gartenplaner',
-                     insert=(xmm2px(w_mm/2), ymm2px(title_height_mm/2)),
+                     insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2)),
+                     class_='txt',
+                     text_anchor='middle'))
+    dwg.add(dwg.text('Periode:',
+                     insert=(xmm2px(0.65*w_mm), ymm2px(title_height_mm/2)),
                      class_='txt',
                      text_anchor='middle'))
     return dwg

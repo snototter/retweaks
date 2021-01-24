@@ -23,11 +23,13 @@ Customization steps I performed after completing the rM tutorial:
     ```bash
     Match host <HOSTNAME> exec "nc -z 10.11.99.1 -w 1 %p"
         HostName 10.11.99.1
+        ConnectTimeout 1
     Match host <HOSTNAME>
         HostName <WIFI-IP-ADDRESS>
+        ConnectTimeout 3
     Host <HOSTNAME>
-      User root
-      IdentityFile ~/.ssh/<KEYNAME>
+        User root
+        IdentityFile ~/.ssh/<KEYNAME>
     ```
   * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device (I'm a simple guy, I like simple UIs)
 * Change command aliases via `~/.bashrc`:

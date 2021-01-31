@@ -16,6 +16,7 @@ import sys
 import subprocess
 import svgwrite
 import json
+import math
 
 
 def rm2dimensions():
@@ -453,6 +454,122 @@ def gardening_planner(filename, font_size_px=42):
     return dwg
 
 
+def todo_list(filename, font_size_px=42,
+              title_height_mm=10,
+              guide_cells_mm=7,
+              num_guides_per_item=2,
+              guide_radius_px=1,
+              margin_left_mm=14,
+              checkbox_size_mm=3.5,
+              distance_box_dots_mm=3.5,
+              distance_box_divider_mm=-2.5):
+    """
+    Renders a todo list (similar to the built-in, but with
+    additional dots for orientation and nicer checkbox indentation)
+
+    :filename: Output filename of the SVG.
+
+    :font_size_px: Font size of the title in pixels.
+
+    :title_height_mm: Height of the title in [mm]
+
+    :guide_cells_mm: Size of the guide cells in [mm]
+
+    :num_guides_per_item: Number of "guide rows" per checklist item
+
+    :guide_radius_px: Radius of the guide dots
+
+    :margin_left_mm: FIXME
+    :checkbox_size_mm:
+    :distance_box_dots_mm:
+    :distance_box_divider_mm:
+    """
+    w_px, h_px, w_mm, h_mm = rm2dimensions()
+
+    dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
+                           profile='tiny', debug=False)
+    # Height/width weren't set properly (my SVGs had 100% instead of the correct
+    # dimensions). Thus, overwrite the attributes manually:
+    dwg.attribs['height'] = f'{h_px}px'
+    dwg.attribs['width'] = f'{w_px}px'
+
+    # Add style definitions
+    dwg.defs.add(dwg.style("""
+.checkbox { stroke: rgb(80,80,80); stroke-width:2px; fill:#ffffff; }
+.divider { stroke: rgb(80,80,80); stroke-width:1px; }
+.dots { stroke: rgb(128,128,128); stroke-width:1px; }
+.txt { font-size: """ + str(font_size_px) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
+"""))
+
+    # Background should not be transparent
+    dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), class_='grid', fill='white'))
+
+    # Millimeter to pixel conversion
+    def ymm2px(y_mm):
+        return y_mm / h_mm * h_px
+
+    def xmm2px(x_mm):
+        return x_mm / w_mm * w_px
+    
+    # Pre-computable dimensions:
+    w_px = xmm2px(w_mm)
+    
+    # Title text
+    dwg.add(dwg.text('Notes & TODOs',
+                     insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2)),
+                     class_='txt',
+                     text_anchor='middle'))
+    dwg.add(dwg.text('Date:',
+                     insert=(xmm2px(0.65*w_mm), ymm2px(title_height_mm/2)),
+                     class_='txt',
+                     text_anchor='middle'))
+    
+    # Group all lines and dots
+    grid = dwg.add(dwg.g(id='grid'))
+    y_px = ymm2px(title_height_mm)
+    grid.add(dwg.line(start=(0, y_px), end=(w_px, y_px),
+                      class_='divider'))
+
+    num_rows = (h_mm - title_height_mm) / guide_cells_mm
+    num_items = math.floor(num_rows / num_guides_per_item)
+    guide_row = 0
+    item_count = 0
+    y_mm = title_height_mm
+
+    checkbox_left_px = xmm2px(margin_left_mm)
+    checkbox_offsety_px = ymm2px((num_guides_per_item * guide_cells_mm - checkbox_size_mm) / 2)
+    checkbox_width_px = xmm2px(checkbox_size_mm)
+    checkbox_height_px = ymm2px(checkbox_size_mm)
+    guide_left_px = xmm2px(margin_left_mm
+                           + checkbox_size_mm
+                           + distance_box_dots_mm)
+    guide_width_px = xmm2px(guide_cells_mm)
+    divider_left_px = xmm2px(margin_left_mm
+                             + checkbox_size_mm
+                             + distance_box_divider_mm)
+    while guide_row < num_rows:
+        y_px = ymm2px(y_mm)
+        if (guide_row % num_guides_per_item == 0) and (item_count < num_items):
+            x_px = 0 if guide_row == 0 else divider_left_px            
+            grid.add(dwg.line(start=(x_px, y_px), end=(w_px, y_px),
+                              class_='divider'))
+            # Draw checkbox
+            grid.add(dwg.rect(insert=(checkbox_left_px, y_px + checkbox_offsety_px),
+                              size=(checkbox_width_px, checkbox_height_px),
+                              class_='checkbox'))
+            item_count += 1
+        else:
+            # Draw dots for guidance
+            x_px = guide_left_px
+            while x_px < w_px:
+                grid.add(dwg.circle(center=(x_px, y_px), r=guide_radius_px, class_='dots'))
+                x_px += guide_width_px
+        guide_row += 1
+        y_mm += guide_cells_mm
+
+    return dwg
+
+
 def template_dict(name, filename, icon_code,
                   landscape, categories):
     """Returns an entry for remarkable's template.json config file."""
@@ -545,4 +662,11 @@ if __name__ == '__main__':
                   icon_code_portrait='\ue98f',
                   icon_code_landscape=None,
                   categories=['Life/organize'])
-    
+
+    # Render a generic todo list
+    save_template(todo_list('TodoListP.svg'),
+                  None,
+                  name='TODOs', rmfilename='TodoListP',
+                  icon_code_portrait='\ue98f',
+                  icon_code_landscape=None,
+                  categories=['Life/organize'])

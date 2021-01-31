@@ -456,13 +456,13 @@ def gardening_planner(filename, font_size_px=42):
 
 def todo_list(filename, font_size_px=42,
               title_height_mm=10,
-              guide_cells_mm=7,
+              guide_cells_mm=6.5,
               num_guides_per_item=2,
               guide_radius_px=1,
               margin_left_mm=14,
               checkbox_size_mm=3.5,
               distance_box_dots_mm=3.5,
-              distance_box_divider_mm=-2.5):
+              distance_box_divider_mm=-1.5):
     """
     Renders a todo list (similar to the built-in, but with
     additional dots for orientation and nicer checkbox indentation)
@@ -479,10 +479,14 @@ def todo_list(filename, font_size_px=42,
 
     :guide_radius_px: Radius of the guide dots
 
-    :margin_left_mm: FIXME
-    :checkbox_size_mm:
-    :distance_box_dots_mm:
-    :distance_box_divider_mm:
+    :margin_left_mm: Margin between left border and checkboxes in [mm].
+
+    :checkbox_size_mm: Size of each checkbox in [mm]
+
+    :distance_box_dots_mm: Distance between checkbox and guidance dots.
+
+    :distance_box_divider_mm: Distance between checkbox and item divider (can
+                              also be negative).
     """
     w_px, h_px, w_mm, h_mm = rm2dimensions()
 
@@ -516,11 +520,11 @@ def todo_list(filename, font_size_px=42,
     
     # Title text
     dwg.add(dwg.text('Notes & TODOs',
-                     insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2)),
+                     insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2 + 1)),
                      class_='txt',
                      text_anchor='middle'))
     dwg.add(dwg.text('Date:',
-                     insert=(xmm2px(0.65*w_mm), ymm2px(title_height_mm/2)),
+                     insert=(xmm2px(0.65*w_mm), ymm2px(title_height_mm/2 + 1)),
                      class_='txt',
                      text_anchor='middle'))
     

@@ -518,13 +518,14 @@ def todo_list(filename, font_size_px=42,
     # Pre-computable dimensions:
     w_px = xmm2px(w_mm)
     
+    checkbox_left_px = xmm2px(margin_left_mm)    
     # Title text
     dwg.add(dwg.text('Notes & TODOs',
-                     insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2 + 1)),
+                     insert=(checkbox_left_px, ymm2px(title_height_mm/2 + 1)), #insert=(xmm2px(0.35*w_mm), ymm2px(title_height_mm/2 + 1)),
                      class_='txt',
-                     text_anchor='middle'))
+                     text_anchor='start')) # text_anchor='middle'))
     dwg.add(dwg.text('Date:',
-                     insert=(xmm2px(0.65*w_mm), ymm2px(title_height_mm/2 + 1)),
+                     insert=(xmm2px(0.75*w_mm), ymm2px(title_height_mm/2 + 1)),
                      class_='txt',
                      text_anchor='middle'))
     
@@ -540,7 +541,6 @@ def todo_list(filename, font_size_px=42,
     item_count = 0
     y_mm = title_height_mm
 
-    checkbox_left_px = xmm2px(margin_left_mm)
     checkbox_offsety_px = ymm2px((num_guides_per_item * guide_cells_mm - checkbox_size_mm) / 2)
     checkbox_width_px = xmm2px(checkbox_size_mm)
     checkbox_height_px = ymm2px(checkbox_size_mm)

@@ -372,6 +372,74 @@ def ruled_grid5mm(filename,
     return dwg
 
 
+
+def print3d_template(filename,
+                     major_tick_len_horz_mm=5.0,
+                     major_tick_len_vert_mm=3.5,
+                     tick_label_margin_mm=1,
+                     draw_markers=True,
+                     draw_corner_diagonals=False,
+                     invert_vertical_axis=True,
+                     font_size_px=21,
+                     landscape=False):
+    dwg = ruled_grid5mm(filename,
+                        major_tick_len_horz_mm=major_tick_len_horz_mm,
+                        major_tick_len_vert_mm=major_tick_len_vert_mm,
+                        tick_label_margin_mm=tick_label_margin_mm,
+                        draw_markers=draw_markers,
+                        draw_corner_diagonals=draw_corner_diagonals,
+                        invert_vertical_axis=invert_vertical_axis,
+                        font_size_px=font_size_px,
+                        landscape=landscape)
+    # Millimeter to pixel conversion
+    w_px, h_px, w_mm, h_mm = rm2dimensions()
+    def ymm2px(y_mm):
+        return y_mm / h_mm * h_px
+
+    def xmm2px(x_mm):
+        return x_mm / w_mm * w_px
+
+    # Add the 3d printer task list to the template (top-right)
+    insert_x_mm = 133.5 - 2.5
+    insert_y_mm = 10
+    insert_w_mm = 15
+    insert_h_mm = 15
+    text_offset_mm = 5
+    stroke_width_box = 2
+    cb_width_mm = 2.5
+
+    left_px = xmm2px(insert_x_mm) + stroke_width_box/2
+    top_px = ymm2px(insert_y_mm) + stroke_width_box/2
+    dwg.add(dwg.rect(insert=(left_px, top_px),
+                     size=(xmm2px(insert_w_mm) - stroke_width_box, ymm2px(insert_h_mm) - stroke_width_box),
+                     fill='white', stroke_width='{:d}'.format(stroke_width_box), stroke='gray'))
+    
+    txt_offset_px = ymm2px(text_offset_mm)
+    txt_left_px = left_px + xmm2px(text_offset_mm)
+    dwg.add(dwg.text('Sketched',
+                     insert=(txt_left_px, top_px + txt_offset_px/2),
+                     class_='txt',
+                     text_anchor='start'))
+    dwg.add(dwg.text('Sliced',
+                     insert=(txt_left_px, top_px + 1.5*txt_offset_px),
+                     class_='txt',
+                     text_anchor='start'))
+    dwg.add(dwg.text('Printed',
+                     insert=(txt_left_px, top_px + 2.5*txt_offset_px),
+                     class_='txt',
+                     text_anchor='start'))
+    
+    cb_left_px = xmm2px(insert_x_mm + (5-cb_width_mm)/2)
+
+    for i in range(3):
+        cb_top_px = top_px + i*txt_offset_px + ymm2px((5-cb_width_mm)/2)
+        dwg.add(dwg.rect(insert=(cb_left_px, cb_top_px),
+                         size=(xmm2px(cb_width_mm), ymm2px(cb_width_mm)),
+                         fill='white', stroke_width='{:d}'.format(stroke_width_box), stroke='gray'))
+
+    return dwg
+
+
 def gardening_planner(filename, font_size_px=42):
     """
     Renders a quarterly gardening task list/planner.
@@ -657,6 +725,14 @@ if __name__ == '__main__':
                   name='Grid Ruler', rmfilename='GridRulerLS',
                   icon_code_portrait=None,
                   icon_code_landscape='\ue9fa',
+                  categories=['Grids'])
+    
+    # 3D printer template (5mm grid with ruler in portrait mode)
+    save_template(print3d_template('Print3dP.svg', draw_markers=False),
+                  print3d_template('Print3dP.svg', draw_markers=True),
+                  name='3D Printing', rmfilename='Print3dP',
+                  icon_code_portrait='\ue99e',
+                  icon_code_landscape=None,
                   categories=['Grids'])
     
     # Render a gardening plan/todo list

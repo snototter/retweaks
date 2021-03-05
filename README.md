@@ -142,7 +142,8 @@ My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically
 
 ## Templates
 Templates are located at `/usr/share/remarkable/templates`. To back them up (as of firmware version 2.5):  
-`scp -r root@<HOSTNAME>:/usr/share/remarkable/templates rm2-backup/templates/`
+`scp -r root@<HOSTNAME>:/usr/share/remarkable/templates rm2-backup/templates/`  
+*Caveat:* custom templates are not available on the rm cloud, you will see a `unable to load document background` watermark on the synchronized PDFs.
 
 A template consists of:
 * A PNG file which is shown as the first layer of your notebook/sheet.
@@ -175,12 +176,10 @@ Notes:
 
 # TODOs
 Ideas, apps and tweaks I'd like to try:
-* [ ] Grid templates: PNG with utility markers, SVG without (for export)
-* [ ] Gardening calendar template
-* [ ] Update readme w/ templates caveat: not exported to the cloud - "unable to load document background" within the cloud app
-* [ ] Investigate print issues
+* [x] Investigate print issues
   * On Ubuntu 18.04 exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
-  * Printing from Windows worked nicely
+  * Printing from Ubuntu 20.04 worked nicely (157x210 mm)
+  * Printing from Windows worked nicely (157x210 mm)
 * cross compilation  
   https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
   rm toolchain: https://remarkablewiki.com/devel/qt_creator
@@ -200,5 +199,5 @@ Ideas, apps and tweaks I'd like to try:
     [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)  
     [python minimal ipp server](https://github.com/h2g2bob/ipp-server)
 * [ ] Pointer position (rmview/rm-vnc-server) could be used to implement a wacom input device?
-* [ ] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
+* [x] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
 

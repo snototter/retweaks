@@ -79,7 +79,7 @@ def _rm_dirent_from_metadata(metadata_filename):
                         _parent=parent)
 
 def dfs(node, indent=0):
-    print(' '*indent + node.visible_name)
+    print(f"{' '*indent}{node.visible_name} {'DIR' if isinstance(node, RCollection) else ''} {node.uuid}")
     if node.dirent_type == RCollection.dirent_type:
         for child in node.children:
             dfs(child, indent+4)
@@ -116,8 +116,24 @@ def build_rm_filesystem(folder):
 
     #TODO
     dfs(root)
+    return root
     
 
+def render_test():
+    from rmrl import render
+    # import shutil
+    # render_output = render(os.path.join(os.path.dirname(__file__), 'dev-files', 'xochitl', '18cc3ec7-6e38-49ec-8de4-a28ca9530e02'))
+    render_output = render(os.path.join(os.path.dirname(__file__), 'dev-files', 'xochitl', '53d9369c-7f2c-4b6d-b377-0fc5e71135cc'))
+    
+    print('RENDER OUTPUT: ', type(render_output))
+    #render_output.seek(0)
+    from pdfrw import PdfReader, PdfWriter
+    pdf_stream = PdfReader(render_output)
+    print('DUMP INFO:', pdf_stream.Info)
+    pdf_stream.Info.Title = 'Notebook Title'
+    PdfWriter('render-test.pdf', trailer=pdf_stream).write()
+    # with open('render-test.pdf', "wb") as outfile:
+    #     shutil.copyfileobj(output, outfile)
 
 
 # def list_types(folder):
@@ -142,4 +158,5 @@ def build_rm_filesystem(folder):
 
 if __name__ == '__main__':
     # list_types(os.path.join(os.path.dirname(__file__), 'dev-files', 'xochitl'))
-    build_rm_filesystem(os.path.join(os.path.dirname(__file__), 'dev-files', 'xochitl'))
+    dirtree = build_rm_filesystem(os.path.join(os.path.dirname(__file__), 'dev-files', 'xochitl'))
+    render_test()

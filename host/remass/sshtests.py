@@ -1,11 +1,12 @@
 import paramiko
+# from . import filebrowsing
 
 RM_FILE_DIR = '/home/root/.local/share/remarkable/xochitl'
 
 
 #paramiko.common.logging.basicConfig(level=paramiko.common.DEBUG) 
 
-host_ = 'nyt'
+host_ = '10.11.99.1' #nyt'
 port_ = 22
 username_ = 'root'
 password_ = 'NotizenKritzler'
@@ -34,7 +35,13 @@ for i in sftp.listdir():
 
 print('CWD:', sftp.getcwd())
 stdin,stdout,stderr=client.exec_command(f'ls -la "{RM_FILE_DIR}"')
-print('ls rm_file_dir:',  '\n'.join(stdout.readlines()))
+print('ls rm_file_dir:',  ''.join(stdout.readlines()))
+
+print('Listing xochitl files:')
+for fn in sftp.listdir(RM_FILE_DIR):
+  print(f'* {fn}')
+
+
 sftp.close()
 
 

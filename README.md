@@ -4,15 +4,19 @@ This is a collection of customization tweaks for my remarkable2.
 As these are personal customizations I will give no guarantees that any of these will work for you. The only guarantee I can give is that there is no ill intended code. There may, however, be bugs, you may lose data, or even brick your device (if you don't know what you're doing...).
 
 Note that this is (more or less, depending on my need for sleep) ongoing work as of 01/2021.  
-All the stuff in this repository has so far been tested with FW version `2.5.0.27`.
+All the stuff in this repository has so far been tested with FW versions:
+* `2.5.0.27`
+* `2.6.2.75`
+* `2.7.0.51`
 
 
 # Installation
 ## General Device Setup
-Customization steps I performed after completing the rM tutorial:
-* Change hostname via `/etc/hostname` (yes, I'm that nit-picky).  
-  Takes affect after reboot.
+Customization steps I performed after completing the rM tutorial (and after firmware upgrades, see corresponding comments):
+* Change hostname via `/etc/hostname`. Takes effect after reboot.
+  * This step is also needed after upgrading the firmware from 2.5 to 2.6/2.6 to 2.7.
 * Simplify SSH access (refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh) for details and troubleshooting).
+  * These tablet options (SSH password and public key) remained intact during firmware upgrade from 2.5 to 2.6.
   * The password is shown on the device via `Settings > Help > Copyrights and Licenses`
   * SSH password can be changed via `~/.config/remarkable/xochitl.conf`, edit the `DeveloperPassword` setting.
   * Add your public key for passwordless login (from the host) - if you don't have a key already, use `ssh-keygen` (standard RSA should work fine):
@@ -31,34 +35,32 @@ Customization steps I performed after completing the rM tutorial:
         User root
         IdentityFile ~/.ssh/<KEYNAME>
     ```
-  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device (I'm a simple guy, I like simple UIs)
-* Change command aliases via `~/.bashrc`:
-  ```bash
-  alias ll='ls -la`
-  alias ..='cd ..'
-  ```
+  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device.
 * Change time zone (to prevent some potential issues due to clock mismatch between host and device):
-  * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` for me. **TODO:** check if DST switch works (should as `/usr/share/zoneinfo/CET` contains the jump dates between `CET` and `CEST`)
-  * Set the timezone on the tablet: `timedatectl set-timezone CET`
+  * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` (or `CEST` during DST) for me.
+  * Set the timezone on the tablet: `timedatectl set-timezone CET`  
+    During DST you also need to set the standard timezone (i.e. `CET`, not `CEST`).
+  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
 
 ## Native Printing
-Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) to be able to print directly to the device, without accessing the rM cloud.  
-```bash
-ssh <HOSTNAME>
-wget -O - http://raw.githubusercontent.com/Evidlo/remarkable_printer/master/install.sh | sh
-```
-Then add the device as AppSocket printer:
-* `System > Printers > Add Printer`
-* Add a network printer: `AppSocket/HP JetDirect` (hostname/IP and default port number 9100).
-* Provide PPD file (my custom PPD defines a media size of 157x210 mm instead of [evidlo's](https://github.com/Evidlo/remarkable_printer/blob/master/remarkable.ppd) 155x205)
-Caveats:
-* No authentication - anyone on the network could print (if IP is known and they can find a suitable PPD).
-* PDF titles aren't working in my setup - all printed files are entitled "printed" on the remarkable
-* The application is active listening on the 9100 socket - should use [socket activation](https://github.com/Evidlo/remarkable_printer) instead.
-* Useful extensions (TODOs):
-  * [Requires Go proficiency] Specify output directory (`inbox` or similar) and save there - just requires adjusting the template.  
-    **However**, the `inbox` directory must exist. Thus, we would need to parse the `.metadata` files, build the internal file structure and then check if the "folder" exists (and create if needed).
-  * Include date/time string in default title.
+* Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) to be able to print directly to the device, without accessing the rM cloud.  
+  ```bash
+  ssh <HOSTNAME>
+  wget -O - http://raw.githubusercontent.com/Evidlo/remarkable_printer/master/install.sh | sh
+  ```
+  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
+* Then add the device as AppSocket printer:
+  * `System > Printers > Add Printer`
+  * Add a network printer: `AppSocket/HP JetDirect` (hostname/IP and default port number 9100).
+  * Provide PPD file (my custom PPD defines a media size of 157x210 mm instead of [evidlo's](https://github.com/Evidlo/remarkable_printer/blob/master/remarkable.ppd) 155x205)
+* Caveats:
+  * No authentication - anyone on the network could print (if IP/hostname is known and they can find a suitable PPD).
+  * PDF titles aren't working in my setup - all printed files are entitled "printed" on the remarkable
+  * The application is active listening on the 9100 socket - should use [socket activation](https://github.com/Evidlo/remarkable_printer) instead.
+  * Useful extensions (TODOs):
+    * (Requires Go proficiency) Specify output directory (`inbox` or similar) and save there - just requires adjusting the template.  
+      **However**, the `inbox` directory must exist. Thus, we would need to parse the `.metadata` files, build the internal file structure and then check if the "folder" exists (and create if needed).
+    * Include date/time string in default title.
 
 ## UI Improvements
 * Install [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) for really useful interface features.
@@ -66,15 +68,19 @@ Caveats:
   $ ssh <HOSTNAME>
   # sh -c "$(wget https://raw.githubusercontent.com/ddvk/remarkable-hacks/master/patch.sh -O-)"
   ```
+  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
 * Install [funkey's low pass filter](https://github.com/funkey/recept) to fix jagged lines.
-  ```bash
-  $ cd tryouts
-  $ git clone https://github.com/funkey/recept
-  $ cd recept
-  $ ./install.sh
-  ```
+  * The firmware version 2.6 reduces the jagged lines issue by a lot. Currently, I don't need the funkey fix any longer.
+  * For firmware version 2.5 and below, follow these installation steps:
+    ```bash
+    $ # On host computer
+    $ git clone https://github.com/funkey/recept
+    $ cd recept
+    $ ./install.sh
+    ```
 
 ## Use the Tablet as a Whiteboard
+**TODO:** the 2.6 and 2.7 firmware upgrades include a system library incompatible with rmview, see [this issue on the rmview github](https://github.com/bordaigorl/rmview/issues/57)  
 In my tests, both [reStream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
 However, rmview already provides all features I need for a digital whiteboard - like auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.
 Additionally, it uses damage tracking to send only necessary updates and thus, reduces the required bandwidth.

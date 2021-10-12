@@ -1,29 +1,25 @@
 # retweaks
 
-This is a collection of customization tweaks for my remarkable2.
-As these are personal customizations I will give no guarantees that any of these will work for you. The only guarantee I can give is that there is no ill intended code. There may, however, be bugs, you may lose data, or even brick your device (if you don't know what you're doing...).
+This is a collection of simple tweaks I find useful for remarkable2 tablets.
 
-Note that this is (more or less, depending on my need for sleep) ongoing work as of 01/2021.  
-All the stuff in this repository has so far been tested with FW versions:
-* `2.5.0.27`
-* `2.6.2.75`
-* `2.7.0.51`
-
-
-# Installation
-## General Device Setup
-Customization steps I performed after completing the rM tutorial (and after firmware upgrades, see corresponding comments):
+# Recurrent Customizations
+Required after each firmware upgrade unless noted otherwise:
 * Change hostname via `/etc/hostname`. Takes effect after reboot.
-  * This step is also needed after upgrading the firmware from 2.5 to 2.6/2.6 to 2.7.
-* Simplify SSH access (refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh) for details and troubleshooting).
-  * These tablet options (SSH password and public key) remained intact during firmware upgrade from 2.5 to 2.6.
-  * The password is shown on the device via `Settings > Help > Copyrights and Licenses`
-  * SSH password can be changed via `~/.config/remarkable/xochitl.conf`, edit the `DeveloperPassword` setting.
-  * Add your public key for passwordless login (from the host) - if you don't have a key already, use `ssh-keygen` (standard RSA should work fine):
+* Change time zone (to prevent some potential issues due to clock mismatch between host and device):
+  * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` (or `CEST` during DST) for me.
+  * Set the timezone on the tablet: `timedatectl set-timezone CET`  
+    During DST you also need to set the standard timezone (i.e. `CET`, not `CEST`).
+
+# One-time Customizations
+The following tweaks seem to remain intact during firmware upgrades:
+* Simplify SSH access (for more details refer to the [remarkablewiki](https://remarkablewiki.com/tech/ssh)).  
+  * The SSH password is shown on the device via `Settings > Help > Copyrights and Licenses`
+  * The SSH password can be changed via `~/.config/remarkable/xochitl.conf`, editing the `DeveloperPassword` setting.
+  * Add public key for passwordless login - use `ssh-keygen` if no public key is available (standard RSA should work fine):
     ```bash
     $ cat ~/.ssh/<KEYNAME>.pub | ssh root@<IP-ADDRESS> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
     ```
-  * Edit `~/.ssh/config` on the host to use the key and prefer the Ethernet-over-USB connection over WIFI:
+  * Edit `~/.ssh/config` on the **host** to use the key and prefer the Ethernet-over-USB connection over WIFI:
     ```bash
     Match host <HOSTNAME> exec "nc -z 10.11.99.1 -w 1 %p"
         HostName 10.11.99.1
@@ -35,12 +31,41 @@ Customization steps I performed after completing the rM tutorial (and after firm
         User root
         IdentityFile ~/.ssh/<KEYNAME>
     ```
-  * Set up [FileZilla](https://filezilla-project.org/) to simplify transfering files from/to the device.
-* Change time zone (to prevent some potential issues due to clock mismatch between host and device):
-  * To find out your timezone, run `date +%Z` on the host. For example, this prints out `CET` (or `CEST` during DST) for me.
-  * Set the timezone on the tablet: `timedatectl set-timezone CET`  
-    During DST you also need to set the standard timezone (i.e. `CET`, not `CEST`).
-  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
+* Set up [FileZilla](https://filezilla-project.org/) on the **host** to simplify transfering files from/to the device.
+
+# Install Custom Templates
+Each upgrade overwrites the custom templates.  
+In order to reinstall them:
+```bash
+cd host/template-scripting
+# If templates haven't been build so far:
+./build_templates.sh
+
+# This downloads the template configuration from the tablet, modifies it and re-syncs it with the tablet:
+./install_templates.sh
+```
+
+# External Tweaks
+* [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) add useful gestures & settings (pen styles, recently opened doc list, etc.)  
+  Check the patch availability before firmware upgrade if you got used to these features!
+* [bordaigorl's rmview](https://github.com/bordaigorl/rmview) is an easy to use & efficient screen share possibility.  
+  **Note:** firmware 2.6+ includes a system library incompatible with rmview, see [this issue on the rmview github](https://github.com/bordaigorl/rmview/issues/57)  
+  **Note:** firmware 2.10 leverages the official ScreenShare functionality on the tablet
+  * Set up a virtualenv, then `pip install https://github.com/bordaigorl/rmview/archive/refs/heads/vnc.zip`
+  * Add a launcher item on the host `venv/.../python -m rmview`  
+    ```ini
+    [Desktop Entry]
+    Name=rmview
+    Comment=remarkable liveview
+    Exec=<PATH/TO/VIRTUALENV>/bin/python -m rmview
+    Type=Application
+    Terminal=false
+    Icon=<PATH/TO/RETWEAKS/REPO>/host/whiteboard/launcher.svg
+    Categories=Education;
+    StartupWMClass=rmview
+    ```
+  * Edit `~/.config/rmview.json` if needed, see [exemplary config](https://github.com/bordaigorl/rmview/blob/vnc/example.json)
+
 
 ## Native Printing
 * Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) to be able to print directly to the device, without accessing the rM cloud.  
@@ -62,15 +87,9 @@ Customization steps I performed after completing the rM tutorial (and after firm
       **However**, the `inbox` directory must exist. Thus, we would need to parse the `.metadata` files, build the internal file structure and then check if the "folder" exists (and create if needed).
     * Include date/time string in default title.
 
-## UI Improvements
-* Install [ddvk's binary patches](https://github.com/ddvk/remarkable-hacks) for really useful interface features.
-  ```bash
-  $ ssh <HOSTNAME>
-  # sh -c "$(wget https://raw.githubusercontent.com/ddvk/remarkable-hacks/master/patch.sh -O-)"
-  ```
-  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
+## Obsolete UI Improvements
 * Install [funkey's low pass filter](https://github.com/funkey/recept) to fix jagged lines.
-  * The firmware version 2.6 reduces the jagged lines issue by a lot. Currently, I don't need the funkey fix any longer.
+  * **Note:** Firmware version 2.6 reduced the jagged lines issue by a lot. Currently, I don't need the funkey fix any longer.
   * For firmware version 2.5 and below, follow these installation steps:
     ```bash
     $ # On host computer
@@ -78,39 +97,6 @@ Customization steps I performed after completing the rM tutorial (and after firm
     $ cd recept
     $ ./install.sh
     ```
-
-## Use the Tablet as a Whiteboard
-**TODO:** the 2.6 and 2.7 firmware upgrades include a system library incompatible with rmview, see [this issue on the rmview github](https://github.com/bordaigorl/rmview/issues/57)  
-In my tests, both [reStream](https://github.com/rien/reStream) and [rmview](https://github.com/bordaigorl/rmview) worked out-of-the-box.
-However, rmview already provides all features I need for a digital whiteboard - like auto rotation, reduce bandwidth via damage tracking, show pointer position, etc.
-Additionally, it uses damage tracking to send only necessary updates and thus, reduces the required bandwidth.
-Thus, I'll stick with (the VNC-based) `rmview`:
-* Set up `rmview` on the host:
-  * Prepare PyQt5-based UI on the host:
-    ```bash
-    $ ./host/whiteboard/install_rmview_host.sh
-    ```
-  * Optionally, add a launcher entry in your start menu, either via your favorite menu editor or using a `rmview.desktop` like:
-    ```ini
-    [Desktop Entry]
-    Name=rmview
-    Comment=remarkable liveview
-    Exec=<PATH/TO/VIRTUALENV>/bin/python -m rmview
-    Type=Application
-    Terminal=false
-    Icon=<PATH/TO/RETWEAKS/REPO>/host/whiteboard/launcher.svg
-    Categories=Education;
-    StartupWMClass=rmview
-    ```  
-    A simple [launcher icon](./host/whiteboard/launcher.svg) is provided.
-* Then, copy the included [rM-vnc-server](https://github.com/pl-semiotics/rM-vnc-server) to the device and ensure it is executable:
-  ```bash
-  $ scp host/whiteboard/rmview-2.1/bin/rM2-vnc-server-standalone <HOSTNAME>:rM-vnc-server-standalone
-
-  $ ssh <HOSTNAME>
-  # chmod +x ./rM-vnc-server-standalone
-  ```
-
 
 # Backup Important Locations
 Important locations and files for backing up:
@@ -186,19 +172,8 @@ Ideas, apps and tweaks I'd like to try:
   * On Ubuntu 18.04 exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
   * Printing from Ubuntu 20.04 worked nicely (157x210 mm)
   * Printing from Windows worked nicely (157x210 mm)
-* cross compilation  
-  https://unix.stackexchange.com/questions/510031/how-to-install-cross-compiler-on-ubuntu-18-04  
-  rm toolchain: https://remarkablewiki.com/devel/qt_creator
 * pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
-* low priority: config UI (pyqt5)
-  * replace splash screens
-  * upload templates
-  * replace suspend screen service by UI (?)
 * low priority: wacom input device
-* lowest priority: reprint
-  * ipp print server (cpp tcp)
-  * pdf support (size conversion ??)
-  https://github.com/alexivkin/CUPS-PDF-to-PDF/blob/master/CUPS-PDF_noopt.ppd)
   * maybe support images
   * related projects:  
     [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud)  

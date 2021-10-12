@@ -175,10 +175,6 @@ Ideas, apps and tweaks I'd like to try:
 * pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
 * low priority: wacom input device
   * maybe support images
-  * related projects:  
-    [printing via CUPS and rmapi](https://ofosos.org/2018/10/22/printing-to-remarkable-cloud-from-cups/) (requires sync via cloud)  
-    [go-based native AppSocket/HP JetDirect printer](https://github.com/Evidlo/remarkable_printer)  
-    [python minimal ipp server](https://github.com/h2g2bob/ipp-server)
 * [ ] Pointer position (rmview/rm-vnc-server) could be used to implement a wacom input device?
 * [x] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
 

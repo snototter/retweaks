@@ -173,8 +173,6 @@ Ideas, apps and tweaks I'd like to try:
   * Printing from Ubuntu 20.04 worked nicely (157x210 mm)
   * Printing from Windows worked nicely (157x210 mm)
 * pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
-* low priority: wacom input device
-  * maybe support images
-* [ ] Pointer position (rmview/rm-vnc-server) could be used to implement a wacom input device?
+* low priority: wacom input device --> try remouse instead
 * [x] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
 

@@ -31,9 +31,9 @@ The following tweaks seem to remain intact during firmware upgrades:
         User root
         IdentityFile ~/.ssh/<KEYNAME>
     ```
-* Set up [FileZilla](https://filezilla-project.org/) on the **host** to simplify transfering files from/to the device.
 
 # Install Custom Templates
+TODO TODO move and adjust doc TODO
 Each upgrade overwrites the custom templates.  
 In order to reinstall them:
 ```bash
@@ -69,12 +69,12 @@ cd host/template-scripting
 
 ## Native Printing
 * Install the [remarkable-printer](https://github.com/Evidlo/remarkable_printer) to be able to print directly to the device, without accessing the rM cloud.  
+  This step is needed after every firmware upgrade.
   ```bash
   ssh <HOSTNAME>
   wget -O - http://raw.githubusercontent.com/Evidlo/remarkable_printer/master/install.sh | sh
   ```
-  * This step is also needed after upgrading the firmware from 2.5 to 2.6.
-* Then add the device as AppSocket printer:
+* Then add the device as AppSocket printer on the host:
   * `System > Printers > Add Printer`
   * Add a network printer: `AppSocket/HP JetDirect` (hostname/IP and default port number 9100).
   * Provide PPD file (my custom PPD defines a media size of 157x210 mm instead of [evidlo's](https://github.com/Evidlo/remarkable_printer/blob/master/remarkable.ppd) 155x205)
@@ -100,7 +100,7 @@ cd host/template-scripting
 
 # Backup Important Locations
 Important locations and files for backing up:
-* All personal content (notebooks, books/PDFs, etc.) are located at `~/.local/share/remarkable/xochitl/`.  
+* All personal content (notebooks, books/PDFs, etc.) is located at `~/.local/share/remarkable/xochitl/`.  
   Backing up could take a while:  
   `$ scp -r root@<HOSTNAME>:~/.local/share/remarkable/xochitl/ rm2-backup/xochitl-files/`
 * The configuration file is located at `~/.config/remarkable/xochitl.conf`.  
@@ -123,14 +123,6 @@ Information about the initial files (as of firmware version 2.5) via `file`:
 To back up these files (as of firmware version 2.5):  
 `$ scp root@<HOSTNAME>:/usr/share/remarkable/\{batteryempty.png,overheating.png,rebooting.png,starting.png,lowbattery.png,poweroff.png,splash.png,suspended.png\} rm2-backup/splash-screens/`
 
-My [suspend-screen-cycler](./custom/suspend-screen-cycler) service automatically changes the sleep/suspended screen upon each reboot (actually, every (re)start of `xochitl.service`):
-* Copy the [`./custom`](./custom) directory to the remarkable2 (e.g. to `~/custom`), then install the service via:
-  ```bash
-  # cd ~/custom/suspend-screen-cycler
-  # ./01-install.sh
-  ```
-* To uninstall this service, run `./99-uninstall.sh` - **Note:** this will not restore the original suspend screen.
-
 
 ## Templates
 Templates are located at `/usr/share/remarkable/templates`. To back them up (as of firmware version 2.5):  
@@ -140,10 +132,11 @@ Templates are located at `/usr/share/remarkable/templates`. To back them up (as 
 A template consists of:
 * A PNG file which is shown as the first layer of your notebook/sheet.
 * An SVG file which is used whenever you export your notebook/sheet.
-* A configuration entry to properly load the template. These are stored on the device at `/usr/share/remarkable/templates/templates.json`.
+* A configuration entry to properly load the template. These are stored on the device within `/usr/share/remarkable/templates/templates.json`.
 
 My [custom templates](./host/template-scripting):
-* A [5mm grid](./host/template-scripting/Grid5mm.png). The squares are 5x5 mm on the e-ink display. However, printing an exported notebook is slightly smaller (the exported PDF shows the correct size of 157x210 mm, but the printouts are smaller - **TODO:** I can't print any exported document at the correct size (need to investigate page/image scaling options of the printer).
+* **Caveat:** Printing these correctly takes a fair bit of trial and error with your printer driver and PDF viewer, unfortunately. In all my tests, the exported PDF had the correct size of 157x210 mm, but the printouts heavily varied (tested on Ubuntu 16/18/20 and Windows 10 - with Canon and Brother printers)
+* A [5mm grid](./host/template-scripting/Grid5mm.png). The squares are 5x5 mm on the e-ink display.
 * A [5mm grid with horizontal & vertical rulers](./host/template-scripting/GridRuler.png) - Same caveats (5x5 mm on the e-ink, but smaller when printed).
 
 To automatically install these custom templates on the device:
@@ -164,15 +157,4 @@ To manually install the templates on the device:
 
 Notes:
 * For a list of available icon codes, check the [remarkablewiki](https://remarkablewiki.com/tips/templates).
-
-
-# TODOs
-Ideas, apps and tweaks I'd like to try:
-* [x] Investigate print issues
-  * On Ubuntu 18.04 exported PDFs print at smaller sizes (width of 145 to 152 instead of 157mm), although the PDF dimensions/properties are set up correctly (157x210 mm).
-  * Printing from Ubuntu 20.04 worked nicely (157x210 mm)
-  * Printing from Windows worked nicely (157x210 mm)
-* pagination via [foot pedal](https://www.reddit.com/r/RemarkableTablet/comments/kg9ira/made_a_foot_pedal_for_my_rm2/?utm_source=share&utm_medium=web2x&context=3)
-* low priority: wacom input device --> try remouse instead
-* [x] Measure bandwidth rmview (restream took approx. 11.5G per 3 minutes of whiteboarding)
 

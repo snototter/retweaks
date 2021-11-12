@@ -1,11 +1,7 @@
 rm2-backup/
 **/.venv*/*
 templates.json
-custom/suspend-screen-cycler/splash-screens/poweroff.png
-custom/suspend-screen-cycler/splash-screens/suspended.png
-custom/suspend-screen-cycler/*.index
 *.user
-tryouts/*
 host/whiteboard/rmview*/**
 **/dev-files/*
 

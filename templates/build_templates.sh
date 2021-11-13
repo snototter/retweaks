@@ -8,9 +8,9 @@ then
 fi
 
 # Load our common bash utils
-source "$scriptdir/../../custom/bashfun.sh"
+source "$scriptdir/bashfun.sh"
 
 # Run the python script inside a virtualenv
-ensure_venv "$scriptdir/../.venv3" "$scriptdir/requirements.txt"
+ensure_venv "$scriptdir/venv" "$scriptdir/requirements.txt"
 python "$scriptdir/scripted_templates.py"
 

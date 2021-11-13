@@ -19,8 +19,8 @@ then
 fi
 
 # Load our common bash utils
-source "$scriptdir/../../custom/bashfun.sh"
+source "$scriptdir/custom/bashfun.sh"
 
 # Run the python script to upload to MY device
-ensure_venv "$scriptdir/../.venv3" "$scriptdir/requirements.txt"
+ensure_venv "$scriptdir/venv" "$scriptdir/requirements.txt"
 python "$scriptdir/install_templates.py" --host nyt --overwrite

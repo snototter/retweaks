@@ -662,8 +662,8 @@ def exam_protocol(filename):
     # Add style definitions
     dwg.defs.add(dwg.style("""
 .divider { stroke: rgb(80,80,80); stroke-width:1px; }
-.txttitle { font-size: """ + str(font_size_px_title) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
-.txtfield { font-size: """ + str(font_size_px_field) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
+.txttitle { font-size: """ + str(font_size_px_title) + """px; font-family: xkcd; fill: #404040;}
+.txtfield { font-size: """ + str(font_size_px_field) + """px; font-family: xkcd; fill: #404040;}
 """))
 
     # Background should not be transparent
@@ -677,67 +677,86 @@ def exam_protocol(filename):
         return x_mm / w_mm * w_px
     
     # Size definitions
-    line_height_mm = 15
-    offset_left_mm = 15
-    offset_right_mm = 15
-    line_txt_offset_mm = 3
+    line_height_mm = 12
+    offset_x_mm = 12
+    offset_left_line_mm = 30
+    line_length_mm = 45
     
-    def _line(x_mm, y_mm, line_length_mm=100):
+    def _line(x_mm, y_mm, length=line_length_mm):
         return dwg.line(start=(xmm2px(x_mm), ymm2px(y_mm)),
-                        end=(xmm2px(x_mm + line_length_mm), ymm2px(y_mm)),
+                        end=(xmm2px(x_mm + length), ymm2px(y_mm)),
                         class_='divider')
+
     dwg.add(dwg.text('Examination Protocol',
-                     insert=(xmm2px(0.5*w_mm), font_size_px_title + 5), #ymm2px(title_height_mm)),
+                     insert=(xmm2px(0.5*w_mm), 1.5*font_size_px_title),
                      class_='txttitle',
                      text_anchor='middle'))
+    y_mm = 8 + line_height_mm
     dwg.add(dwg.text('Course:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(30)),
-                     class_='txtfield',
-                     text_anchor='left'))
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+                     class_='txtfield'))
+    #dwg.add(_line(offset_left_line_mm, y_mm, w_mm - offset_x_mm - offset_left_line_mm))
+    dwg.add(_line(offset_left_line_mm, y_mm))
 
-    dwg.add(_line(40, 30, 100))
-    dt_line_length_mm = 50
-    dwg.add(dwg.text('Date:', # TODO 6 cm line
-                     insert=(xmm2px(offset_left_mm), ymm2px(50)),
-                     class_='txtfield',
-                     text_anchor='left'))
-    dwg.add(_line(40, 50, dt_line_length_mm))
-    dwg.add(dwg.text('Time:',
-                     insert=(xmm2px(w_mm - offset_right_mm - dt_line_length_mm - line_txt_offset_mm), ymm2px(50)),
-                     class_='txtfield',
-                     text_anchor='right'))
-    dwg.add(_line(w_mm - offset_right_mm - dt_line_length_mm, 50, dt_line_length_mm))
+    dwg.add(dwg.text('Examiner:',
+                     insert=(xmm2px(w_mm - offset_x_mm - line_length_mm - 20), ymm2px(y_mm)),
+                     class_='txtfield'))
+    dwg.add(_line(w_mm - offset_x_mm - line_length_mm, y_mm, line_length_mm))
 
-    y_mm = 60
-    dwg.add(dwg.text('Name:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
-                     class_='txtfield',
-                     text_anchor='left'))
-    y_mm += 15
-    dwg.add(dwg.text('MatNr:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
-                     class_='txtfield',
-                     text_anchor='left'))
-    y_mm += 15
-    dwg.add(dwg.text('Studies:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
-                     class_='txtfield',
-                     text_anchor='left'))
 
-    y_mm += 15
-    dwg.add(dwg.text('Questions:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
-                     class_='txtfield',
-                     text_anchor='left'))
-    y_mm += 15
-    while y_mm < h_mm - 20:
-        dwg.add(_line(offset_left_mm, y_mm))
-        y_mm += 15
+    y_mm += line_height_mm
     
-    dwg.add(dwg.text('Grading:',
-                     insert=(xmm2px(offset_left_mm), ymm2px(h_mm - 5)),
+    dwg.add(dwg.text('Date:',
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+                     class_='txtfield'))
+    dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
+    dwg.add(dwg.text('Time:',
+                     insert=(xmm2px(w_mm - offset_x_mm - line_length_mm - 20), ymm2px(y_mm)),
+                     class_='txtfield'))
+    dwg.add(_line(w_mm - offset_x_mm - line_length_mm, y_mm, line_length_mm))
+
+    y_mm += 1.5*line_height_mm
+    dwg.add(dwg.text('Student:',
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
                      class_='txtfield',
                      text_anchor='left'))
+    dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
+
+    dwg.add(dwg.text('Mat Nr:',
+                     insert=(xmm2px(w_mm - offset_x_mm - line_length_mm - 20), ymm2px(y_mm)),
+                     class_='txtfield'))
+    dwg.add(_line(w_mm - offset_x_mm - line_length_mm, y_mm, line_length_mm))
+    
+    # y_mm += line_height_mm
+    # dwg.add(dwg.text('MatNr:',
+    #                  insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+    #                  class_='txtfield',
+    #                  text_anchor='left'))
+    # dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
+    
+    y_mm += line_height_mm
+    dwg.add(dwg.text('Studies:',
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
+
+    y_mm += 1.5*line_height_mm
+    dwg.add(dwg.text('Questions:',
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    y_mm += line_height_mm
+    indent_factor = 1.8
+    while y_mm < h_mm - 25:
+        dwg.add(_line(indent_factor*offset_x_mm, y_mm, w_mm - 2 * indent_factor * offset_x_mm))
+        y_mm += line_height_mm
+    
+    y_mm += 0.5*line_height_mm
+    dwg.add(dwg.text('Grading:',
+                     insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
+                     class_='txtfield'))
+    dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
     return dwg
 
 

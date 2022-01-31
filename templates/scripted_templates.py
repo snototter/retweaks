@@ -642,6 +642,105 @@ def todo_list(filename, font_size_px=42,
     return dwg
 
 
+def exam_protocol(filename):
+    """
+    Renders a protocol for exams.
+
+    :filename: Output filename of the SVG.
+    """
+    font_size_px_title = 42
+    font_size_px_field = 32
+    w_px, h_px, w_mm, h_mm = rm2dimensions()
+
+    dwg = svgwrite.Drawing(filename=filename, height=f'{h_px}px', width=f'{w_px}px',
+                           profile='tiny', debug=False)
+    # Height/width weren't set properly (my SVGs had 100% instead of the correct
+    # dimensions). Thus, overwrite the attributes manually:
+    dwg.attribs['height'] = f'{h_px}px'
+    dwg.attribs['width'] = f'{w_px}px'
+
+    # Add style definitions
+    dwg.defs.add(dwg.style("""
+.divider { stroke: rgb(80,80,80); stroke-width:1px; }
+.txttitle { font-size: """ + str(font_size_px_title) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
+.txtfield { font-size: """ + str(font_size_px_field) + """px; font-family: xkcd; fill: #404040; dominant-baseline: central; }
+"""))
+
+    # Background should not be transparent
+    dwg.add(dwg.rect(insert=(0, 0), size=(w_px, h_px), fill='white'))
+
+    # Millimeter to pixel conversion
+    def ymm2px(y_mm):
+        return y_mm / h_mm * h_px
+
+    def xmm2px(x_mm):
+        return x_mm / w_mm * w_px
+    
+    # Size definitions
+    line_height_mm = 15
+    offset_left_mm = 15
+    offset_right_mm = 15
+    line_txt_offset_mm = 3
+    
+    def _line(x_mm, y_mm, line_length_mm=100):
+        return dwg.line(start=(xmm2px(x_mm), ymm2px(y_mm)),
+                        end=(xmm2px(x_mm + line_length_mm), ymm2px(y_mm)),
+                        class_='divider')
+    dwg.add(dwg.text('Examination Protocol',
+                     insert=(xmm2px(0.5*w_mm), font_size_px_title + 5), #ymm2px(title_height_mm)),
+                     class_='txttitle',
+                     text_anchor='middle'))
+    dwg.add(dwg.text('Course:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(30)),
+                     class_='txtfield',
+                     text_anchor='left'))
+
+    dwg.add(_line(40, 30, 100))
+    dt_line_length_mm = 50
+    dwg.add(dwg.text('Date:', # TODO 6 cm line
+                     insert=(xmm2px(offset_left_mm), ymm2px(50)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    dwg.add(_line(40, 50, dt_line_length_mm))
+    dwg.add(dwg.text('Time:',
+                     insert=(xmm2px(w_mm - offset_right_mm - dt_line_length_mm - line_txt_offset_mm), ymm2px(50)),
+                     class_='txtfield',
+                     text_anchor='right'))
+    dwg.add(_line(w_mm - offset_right_mm - dt_line_length_mm, 50, dt_line_length_mm))
+
+    y_mm = 60
+    dwg.add(dwg.text('Name:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    y_mm += 15
+    dwg.add(dwg.text('MatNr:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    y_mm += 15
+    dwg.add(dwg.text('Studies:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+
+    y_mm += 15
+    dwg.add(dwg.text('Questions:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(y_mm)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    y_mm += 15
+    while y_mm < h_mm - 20:
+        dwg.add(_line(offset_left_mm, y_mm))
+        y_mm += 15
+    
+    dwg.add(dwg.text('Grading:',
+                     insert=(xmm2px(offset_left_mm), ymm2px(h_mm - 5)),
+                     class_='txtfield',
+                     text_anchor='left'))
+    return dwg
+
+
 def template_dict(name, filename, icon_code,
                   landscape, categories):
     """Returns an entry for remarkable's template.json config file."""
@@ -703,7 +802,13 @@ Rendering template "{name}"
 if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
     # be found on reddit: https://www.reddit.com/r/RemarkableTablet/comments/j75nis/reference_image_template_icon_codes_for_23016/
-
+    # Render the 5mm grid
+    save_template(exam_protocol('ExamProtocol.svg'), None,
+                  name='Exam Protocol', rmfilename='ExamProtocol',
+                  icon_code_portrait='\ue98f',
+                  icon_code_landscape=None,
+                  categories=['Life/organize'])
+    1/0
     # Render the 5mm grid
     save_template(grid5mm('Grid5mm.svg'), None,
                   name='Grid 5mm', rmfilename='Grid5mm',

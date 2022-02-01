@@ -741,13 +741,13 @@ def exam_protocol(filename):
                      text_anchor='left'))
     dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
 
-    y_mm += 1.5*line_height_mm
+    y_mm += line_height_mm
     dwg.add(dwg.text('Questions:',
                      insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
                      class_='txtfield',
                      text_anchor='left'))
     y_mm += line_height_mm
-    indent_factor = 1.8
+    indent_factor = 1.5
     while y_mm < h_mm - 25:
         dwg.add(_line(indent_factor*offset_x_mm, y_mm, w_mm - 2 * indent_factor * offset_x_mm))
         y_mm += line_height_mm
@@ -822,12 +822,12 @@ if __name__ == '__main__':
     # A list of available icons (for a slightly older firmware version) can
     # be found on reddit: https://www.reddit.com/r/RemarkableTablet/comments/j75nis/reference_image_template_icon_codes_for_23016/
     # Render the 5mm grid
-    save_template(exam_protocol('ExamProtocol.svg'), None,
-                  name='Exam Protocol', rmfilename='ExamProtocol',
+    save_template(exam_protocol('ExamProtocolP.svg'), None,
+                  name='Exam Protocol', rmfilename='ExamProtocolP',
                   icon_code_portrait='\ue98f',
                   icon_code_landscape=None,
                   categories=['Life/organize'])
-    1/0
+
     # Render the 5mm grid
     save_template(grid5mm('Grid5mm.svg'), None,
                   name='Grid 5mm', rmfilename='Grid5mm',

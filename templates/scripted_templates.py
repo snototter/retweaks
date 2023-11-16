@@ -735,11 +735,12 @@ def exam_protocol(filename):
     # dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
     
     y_mm += line_height_mm
-    dwg.add(dwg.text('Studies:',
+    dwg.add(dwg.text('Studies (incl. Major/Minor):',
                      insert=(xmm2px(offset_x_mm), ymm2px(y_mm)),
                      class_='txtfield',
                      text_anchor='left'))
-    dwg.add(_line(offset_left_line_mm, y_mm, line_length_mm))
+    dwg.add(_line(offset_left_line_mm + 30, y_mm, line_length_mm))
+
 
     y_mm += line_height_mm
     dwg.add(dwg.text('Questions:',
